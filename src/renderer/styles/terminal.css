@@ -1,0 +1,259 @@
+/* ============ Warp-style terminal ============ */
+
+#terminal-mode {
+  background: var(--bg);
+}
+
+.warp-tabstrip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 42px;
+  padding: 0 10px;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.warp-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.warp-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 8px 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12.5px;
+  transition: background var(--fast), color var(--fast), border-color var(--fast);
+}
+
+.warp-tab:hover {
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+
+.warp-tab.is-active {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.warp-tab .wt-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  flex: 0 0 7px;
+}
+
+.warp-tab.is-active .wt-dot {
+  background: var(--mint);
+  box-shadow: 0 0 8px var(--mint);
+}
+
+.warp-tab .wt-close {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity var(--fast), background var(--fast);
+}
+
+.warp-tab:hover .wt-close,
+.warp-tab.is-active .wt-close {
+  opacity: 1;
+}
+
+.warp-tab .wt-close:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.warp-newtab {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 18px;
+  line-height: 1;
+  transition: background var(--fast), color var(--fast);
+}
+
+.warp-newtab:hover {
+  background: var(--surface-2);
+  color: var(--mint);
+}
+
+.warp-tabstrip-fill {
+  flex: 1;
+}
+
+.warp-toolbtn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  transition: background var(--fast), color var(--fast);
+}
+
+.warp-toolbtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.warp-toolbtn:hover {
+  background: var(--surface-hover);
+  color: var(--mint);
+}
+
+/* ---- Surface that holds the block sessions ---- */
+
+.warp-surface {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 14px;
+  display: flex;
+}
+
+.warp-sessions {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(79, 214, 184, 0.06), transparent 60%),
+    var(--surface-1);
+  overflow: hidden;
+}
+
+.warp-session {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.warp-session.is-hidden {
+  display: none;
+}
+
+.warp-session-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 36px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.wsh-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.wsh-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: block;
+}
+
+.wsh-dots i:nth-child(1) { background: #ff5f57; }
+.wsh-dots i:nth-child(2) { background: #febc2e; }
+.wsh-dots i:nth-child(3) { background: #28c840; }
+
+.wsh-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.wsh-title b {
+  color: var(--mint);
+  font-weight: 600;
+}
+
+.wsh-badge {
+  margin-left: auto;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
+}
+
+.warp-term {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 10px 12px 6px;
+}
+
+/* Tame xterm's default viewport scrollbar to match the dark surface. */
+.warp-term .xterm-viewport {
+  background: transparent !important;
+}
+.warp-term .xterm-viewport::-webkit-scrollbar {
+  width: 9px;
+}
+.warp-term .xterm-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+.warp-term .xterm-viewport::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: var(--r-pill);
+}
+.warp-term .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-hover);
+}
+
+/* ---- Warp-style hint strip under terminal ---- */
+
+.warp-hint {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 30px;
+  padding: 0 14px;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text-dim);
+  font-size: 11.5px;
+}
+
+.warp-hint kbd {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: var(--text-2);
+}

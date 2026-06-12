@@ -1,0 +1,32 @@
+{
+  "name": "tandem",
+  "productName": "Tandem",
+  "version": "0.1.0",
+  "description": "A tabbed desktop app pairing an embedded Chromium browser with a real terminal. macOS first, cross-platform by design.",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "dist": "bash scripts/build-dmg.sh"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.6.0",
+    "@electron-forge/maker-dmg": "^7.6.0",
+    "@electron-forge/maker-zip": "^7.6.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.6.0",
+    "electron": "^33.2.1"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
+    "node-pty": "^1.0.0"
+  },
+  "allowScripts": {
+    "electron@33.4.11": true,
+    "node-pty@1.1.0": true,
+    "fs-xattr@0.3.1": true,
+    "macos-alias@0.2.12": true
+  }
+}

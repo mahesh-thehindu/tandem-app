@@ -1,0 +1,322 @@
+/* ============ Chromium-style browser ============ */
+
+.chrome-tabstrip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 40px;
+  padding: 0 8px;
+  background: var(--chrome-strip);
+}
+
+.chrome-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  flex: 0 1 auto;
+  overflow: hidden;
+}
+
+.chrome-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 33px;
+  width: 200px;
+  min-width: 54px;
+  padding: 0 8px 0 12px;
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  background: transparent;
+  color: var(--text-dim);
+  position: relative;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+
+.chrome-tab:hover {
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+
+.chrome-tab.is-active {
+  background: var(--chrome-toolbar);
+  color: var(--text);
+}
+
+.chrome-tab .tab-favicon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: var(--surface-3);
+}
+
+.chrome-tab .tab-favicon.spinner {
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.chrome-tab .tab-title {
+  flex: 1;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chrome-tab .tab-close {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  flex: 0 0 18px;
+  opacity: 0;
+  transition: opacity var(--fast), background var(--fast), color var(--fast);
+}
+
+.chrome-tab:hover .tab-close,
+.chrome-tab.is-active .tab-close {
+  opacity: 1;
+}
+
+.chrome-tab .tab-close:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.chrome-newtab {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 3px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 19px;
+  line-height: 1;
+  flex: 0 0 28px;
+  transition: background var(--fast), color var(--fast);
+}
+
+.chrome-newtab:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* ---- Toolbar ---- */
+
+.chrome-toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 10px;
+  background: var(--chrome-toolbar);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.nav-cluster {
+  display: flex;
+  gap: 1px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ---- Omnibox ---- */
+
+.omnibox {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 6px 0 12px;
+  background: var(--omnibox-bg);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease), background var(--fast);
+}
+
+.omnibox:focus-within {
+  background: var(--surface-1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.omni-lock {
+  display: grid;
+  place-items: center;
+  color: var(--mint);
+  flex: 0 0 auto;
+}
+
+.omni-lock svg {
+  width: 14px;
+  height: 14px;
+}
+
+.omni-lock.insecure {
+  color: var(--text-dim);
+}
+
+#omnibox-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13.5px;
+  outline: none;
+}
+
+#omnibox-input::placeholder {
+  color: var(--text-dim);
+}
+
+.omni-star {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  flex: 0 0 auto;
+  transition: color var(--fast), background var(--fast);
+}
+
+.omni-star svg {
+  width: 17px;
+  height: 17px;
+}
+
+.omni-star:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.omni-star.is-saved {
+  color: var(--warn);
+}
+
+.omni-star.is-saved svg path {
+  fill: var(--warn);
+}
+
+/* ---- Bookmarks bar ---- */
+
+.bookmarks-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 34px;
+  padding: 0 10px;
+  background: var(--chrome-toolbar);
+  border-bottom: 1px solid var(--border-soft);
+  overflow-x: auto;
+}
+
+.bookmarks-bar.is-hidden {
+  display: none;
+}
+
+.bookmark-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12px;
+  white-space: nowrap;
+  transition: background var(--fast);
+}
+
+.bookmark-chip:hover {
+  background: var(--surface-hover);
+}
+
+.bookmark-chip .bm-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+/* ---- Find bar ---- */
+
+.find-bar {
+  position: absolute;
+  top: 130px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-pop);
+  z-index: 30;
+}
+
+#find-input {
+  width: 200px;
+  height: 28px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  color: var(--text);
+  outline: none;
+}
+
+.find-count {
+  color: var(--text-dim);
+  font-size: 12px;
+  min-width: 44px;
+  text-align: center;
+}
+
+/* ---- Webview stack ---- */
+
+.webview-stack {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 0;
+  background: #fff;
+}
+
+.webview-stack webview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.webview-stack webview.is-hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

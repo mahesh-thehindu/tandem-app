@@ -1,0 +1,49 @@
+:root {
+  /* ---- Base surfaces (near-black, layered) ---- */
+  --bg: #0e0e13;
+  --surface-1: #16161d;
+  --surface-2: #1d1e27;
+  --surface-3: #25262f;
+  --surface-hover: #2c2d38;
+  --border: #2a2b36;
+  --border-soft: #20212a;
+
+  /* ---- Text ---- */
+  --text: #e6e8f0;
+  --text-2: #b6bacb;
+  --text-dim: #6f7488;
+
+  /* ---- Accents ---- */
+  --accent: #6d9bff;          /* global / browser blue */
+  --accent-soft: #233056;
+  --mint: #4fd6b8;            /* Warp-style terminal accent */
+  --mint-soft: #16352f;
+  --danger: #ff6b6b;
+  --warn: #ffcf6b;
+
+  /* ---- Chrome-specific ---- */
+  --chrome-strip: #1a1b22;
+  --chrome-tab: #25262f;
+  --chrome-toolbar: #25262f;
+  --omnibox-bg: #16161d;
+
+  /* ---- Geometry ---- */
+  --titlebar-h: 40px;
+  --traffic-lights: 78px;
+  --r-sm: 6px;
+  --r-md: 9px;
+  --r-lg: 13px;
+  --r-pill: 999px;
+
+  /* ---- Motion ---- */
+  --fast: 120ms;
+  --med: 220ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Fonts ---- */
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+
+  /* ---- Elevation ---- */
+  --shadow-pop: 0 12px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
