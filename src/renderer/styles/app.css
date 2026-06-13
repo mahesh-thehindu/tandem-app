@@ -134,6 +134,98 @@ button {
   -webkit-app-region: no-drag;
 }
 
+/* ---- Code workspace controls in the title bar ---- */
+
+.code-openbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background var(--fast), color var(--fast);
+}
+.code-openbtn svg { width: 15px; height: 15px; }
+.code-openbtn:hover { background: var(--surface-hover); color: var(--text); }
+
+.code-folder {
+  margin-left: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+/* ---- Code stage (webview / empty state) ---- */
+
+.code-stage {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 0;
+  background: var(--bg);
+}
+
+.code-webview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.code-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--text-dim);
+}
+.code-empty[hidden] { display: none; }
+
+.code-empty-ico {
+  width: 56px;
+  height: 56px;
+  color: var(--accent);
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.code-empty h2 { margin: 0; font-size: 22px; color: var(--text); }
+.code-empty p { margin: 0; font-size: 13.5px; }
+
+.code-open-cta {
+  margin-top: 10px;
+  height: 38px;
+  padding: 0 22px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: filter var(--fast);
+}
+.code-open-cta:hover { filter: brightness(1.08); }
+
+.code-hint {
+  margin-top: 14px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
 /* ---------------- Stage / modes ---------------- */
 
 #stage {

@@ -33,6 +33,11 @@ contextBridge.exposeInMainWorld('tandem', {
     read: (path) => ipcRenderer.invoke('md:read', path),
   },
 
+  code: {
+    openFolder: () => ipcRenderer.invoke('code:open-folder'),
+    status: () => ipcRenderer.invoke('code:status'),
+  },
+
   downloads: {
     open: (path) => ipcRenderer.send('download:open', { path }),
     showInFolder: (path) => ipcRenderer.send('download:show', { path }),

@@ -72,6 +72,8 @@ function buildMenu() {
       submenu: [
         { label: 'Show Browser', accelerator: 'CmdOrCtrl+1', click: () => send('view:browser') },
         { label: 'Show Terminal', accelerator: 'CmdOrCtrl+2', click: () => send('view:terminal') },
+        { label: 'Show Code', accelerator: 'CmdOrCtrl+3', click: () => send('view:code') },
+        { label: 'Open Folder in Code…', click: () => send('code:open-folder') },
         { type: 'separator' },
         { label: 'Reload Page', accelerator: 'CmdOrCtrl+R', click: () => send('browser:reload') },
         { label: 'Downloads', accelerator: 'CmdOrCtrl+Shift+J', click: () => send('browser:downloads') },

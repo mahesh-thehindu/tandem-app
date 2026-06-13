@@ -6,12 +6,14 @@ const { createWindow } = require('./windows');
 const { buildMenu } = require('./menu');
 const { registerTerminalIpc, killAll } = require('./terminal/pty-manager');
 const { registerDownloads } = require('./downloads');
+const { registerCodeServer, stopCodeServer } = require('./code-server');
 
 const MD_EXT = ['md', 'markdown', 'mdown', 'mkd', 'txt'];
 
 app.whenReady().then(() => {
   registerTerminalIpc();
   registerDownloads();
+  registerCodeServer();
   buildMenu();
   createWindow();
 
@@ -51,7 +53,8 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   killAll();
+  stopCodeServer();
   if (process.platform !== 'darwin') app.quit();
 });
 
-app.on('before-quit', killAll);
+app.on('before-quit', () => { killAll(); stopCodeServer(); });

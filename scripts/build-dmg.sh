@@ -37,12 +37,15 @@ rm -f "$APP/Contents/Resources/default_app.asar"
 
 echo "▸ Staging app source + runtime deps…"
 APPDIR="$APP/Contents/Resources/app"
-mkdir -p "$APPDIR/node_modules/@xterm"
+mkdir -p "$APPDIR/node_modules"
 cp -R "$ROOT/src" "$APPDIR/"
 cp "$ROOT/package.json" "$APPDIR/"
-cp -R "$ROOT/node_modules/@xterm/xterm" "$APPDIR/node_modules/@xterm/"
-cp -R "$ROOT/node_modules/@xterm/addon-fit" "$APPDIR/node_modules/@xterm/"
+# Copy every runtime dependency the renderer/main load (all @xterm addons,
+# node-pty, marked). The renderer references these by path, so a missing one
+# breaks the packaged app even though `npm start` works from source.
+cp -R "$ROOT/node_modules/@xterm" "$APPDIR/node_modules/"
 cp -R "$ROOT/node_modules/node-pty" "$APPDIR/node_modules/"
+cp -R "$ROOT/node_modules/marked" "$APPDIR/node_modules/"
 
 echo "▸ Installing app icon…"
 if [ ! -f "$ROOT/build/icon.icns" ]; then

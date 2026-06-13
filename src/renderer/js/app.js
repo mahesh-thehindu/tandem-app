@@ -2,9 +2,11 @@
 
 import { initBrowser } from './browser/index.js';
 import { initTerminal } from './terminal/index.js';
+import { initCode } from './code/index.js';
 
 const browserRoot = document.getElementById('browser-mode');
 const terminalRoot = document.getElementById('terminal-mode');
+const codeRoot = document.getElementById('code-mode');
 
 /* ---------------- Toast ---------------- */
 
@@ -50,25 +52,29 @@ const ctx = { dispatch, toast, showPanel, hidePanel, currentPanel, showContextMe
 
 const browser = initBrowser(browserRoot, ctx);
 const terminal = initTerminal(terminalRoot, ctx);
+const code = initCode(codeRoot, ctx);
 
 /* ---------------- Mode switching ---------------- */
 
 let mode = 'browser';
 const browserTabs = document.getElementById('browser-tabcluster');
 const terminalTabs = document.getElementById('terminal-tabcluster');
+const codeTabs = document.getElementById('code-tabcluster');
 const terminalTrail = document.getElementById('terminal-trail');
+const FEATURES = { browser, terminal, code };
 
 function setMode(next) {
   mode = next;
-  const isBrowser = next === 'browser';
-  browserRoot.classList.toggle('is-hidden', !isBrowser);
-  terminalRoot.classList.toggle('is-hidden', isBrowser);
+  browserRoot.classList.toggle('is-hidden', next !== 'browser');
+  terminalRoot.classList.toggle('is-hidden', next !== 'terminal');
+  codeRoot.classList.toggle('is-hidden', next !== 'code');
   // Swap which tab cluster (and trailing actions) the shared title bar shows.
-  browserTabs.hidden = !isBrowser;
-  terminalTabs.hidden = isBrowser;
-  terminalTrail.hidden = isBrowser;
+  browserTabs.hidden = next !== 'browser';
+  terminalTabs.hidden = next !== 'terminal';
+  codeTabs.hidden = next !== 'code';
+  terminalTrail.hidden = next !== 'terminal';
   document.querySelectorAll('.mode-btn').forEach((b) => b.classList.toggle('is-active', b.dataset.mode === next));
-  (isBrowser ? browser : terminal).activate();
+  FEATURES[next].activate();
 }
 document.querySelectorAll('.mode-btn').forEach((b) => {
   b.addEventListener('click', () => setMode(b.dataset.mode));
@@ -104,6 +110,11 @@ function dispatch(action) {
   if (action.startsWith('terminal:')) {
     if (mode !== 'terminal') setMode('terminal');
     terminal.handleCommand(action);
+    return;
+  }
+  if (action.startsWith('code:')) {
+    if (mode !== 'code') setMode('code');
+    code.handleCommand(action);
   }
 }
 
@@ -384,6 +395,8 @@ const paletteList = document.getElementById('palette-list');
 const COMMANDS = [
   { label: 'Show Browser', cat: 'View', key: '⌘1', action: 'view:browser' },
   { label: 'Show Terminal', cat: 'View', key: '⌘2', action: 'view:terminal' },
+  { label: 'Show Code', cat: 'View', key: '⌘3', action: 'view:code' },
+  { label: 'Open Folder in Code', cat: 'Code', action: 'code:open-folder' },
   { label: 'New Tab', cat: 'Browser', key: '⌘T', action: 'browser:new-tab' },
   { label: 'New Incognito Tab', cat: 'Browser', key: '⌘⇧N', action: 'browser:new-incognito' },
   { label: 'Reopen Closed Tab', cat: 'Browser', key: '⌘⇧O', action: 'browser:reopen-tab' },

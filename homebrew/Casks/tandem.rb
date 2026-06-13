@@ -1,6 +1,6 @@
 cask "tandem" do
   version "0.1.0"
-  sha256 "39465d89fef9e56b1a96d4e81f885a3bdcafcecc1e81fea6899e22e3f1c453df"
+  sha256 "fb7d50e0efd1bff24ba10c346111ea5e6d967961e3b09d2bcee3262d9b69be48"
 
   # Local build produced by `npm run dist`. For a shared/public release,
   # replace this with a GitHub Releases URL (see homebrew/README.md).
@@ -10,6 +10,7 @@ cask "tandem" do
   homepage "https://github.com/maheshsv/tandem"
 
   depends_on arch: :arm64
+  depends_on formula: "code-server" # powers the in-app VS Code "Code" tab
 
   app "Tandem.app"
 

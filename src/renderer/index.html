@@ -27,6 +27,10 @@
           <svg viewBox="0 0 24 24" class="mode-ico" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 9l3 2.5L7 14M12.5 14.5H16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Terminal
         </button>
+        <button class="mode-btn" data-mode="code" role="tab" type="button">
+          <svg viewBox="0 0 24 24" class="mode-ico" aria-hidden="true"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4M13 5l-2 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Code
+        </button>
       </div>
 
       <div class="topbar-divider"></div>
@@ -44,6 +48,15 @@
       <div class="tab-cluster" id="terminal-tabcluster" hidden>
         <div class="warp-tabs" id="warp-tabs"></div>
         <button class="warp-newtab" id="warp-newtab" title="New session (⌘⇧T)" type="button">+</button>
+      </div>
+
+      <!-- Code workspace controls (shown in Code mode) -->
+      <div class="tab-cluster" id="code-tabcluster" hidden>
+        <button class="code-openbtn" id="code-open" type="button">
+          <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Open Folder
+        </button>
+        <span class="code-folder" id="code-folder">No folder open</span>
       </div>
 
       <div class="topbar-grow"></div>
@@ -125,6 +138,19 @@
       <section id="terminal-mode" class="mode is-hidden" aria-label="Terminal">
         <div class="warp-surface">
           <div class="warp-sessions" id="warp-sessions"></div>
+        </div>
+      </section>
+
+      <!-- ============ CODE (real VS Code via code-server) ============ -->
+      <section id="code-mode" class="mode is-hidden" aria-label="Code">
+        <div class="code-stage" id="code-stage">
+          <div class="code-empty" id="code-empty">
+            <svg viewBox="0 0 24 24" class="code-empty-ico"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4M13 5l-2 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h2>Code</h2>
+            <p>Open a folder to edit it with the full VS Code editor.</p>
+            <button class="code-open-cta" id="code-open-2" type="button">Open Folder…</button>
+            <span class="code-hint">Powered by code-server · runs locally</span>
+          </div>
         </div>
       </section>
     </main>
