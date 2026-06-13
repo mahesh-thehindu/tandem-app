@@ -102,7 +102,9 @@ const NEW_MENU = [
   { label: 'New Terminal', key: '⌘⇧T', action: 'terminal:new-session', dot: 'var(--app-terminal)' },
   { sep: true },
   { label: 'New Code Workspace…', action: 'code:open-folder', dot: 'var(--app-code)' },
-  { label: 'New Whiteboard', action: 'draw:new', dot: 'var(--app-draw)' },
+  { sep: true },
+  { label: 'New Canvas', action: 'draw:new', dot: 'var(--app-draw)' },
+  { label: 'Excalidraw+', action: 'draw:plus', dot: 'var(--app-draw)' },
 ];
 const newMenuEl = document.getElementById('new-menu');
 document.getElementById('ws-new').addEventListener('click', (e) => {
@@ -436,9 +438,10 @@ const COMMANDS = [
   { label: 'Show Browser', cat: 'View', key: '⌘1', action: 'view:browser' },
   { label: 'Show Terminal', cat: 'View', key: '⌘2', action: 'view:terminal' },
   { label: 'Show Code', cat: 'View', key: '⌘3', action: 'view:code' },
-  { label: 'Show Whiteboard', cat: 'View', key: '⌘4', action: 'view:draw' },
+  { label: 'Show Canvas', cat: 'View', key: '⌘4', action: 'view:draw' },
   { label: 'Open Folder in Code', cat: 'Code', action: 'code:open-folder' },
-  { label: 'New Whiteboard', cat: 'Draw', action: 'draw:new' },
+  { label: 'New Canvas', cat: 'Canvas', action: 'draw:new' },
+  { label: 'Open Excalidraw+', cat: 'Canvas', action: 'draw:plus' },
   { label: 'New Tab', cat: 'Browser', key: '⌘T', action: 'browser:new-tab' },
   { label: 'New Incognito Tab', cat: 'Browser', key: '⌘⇧N', action: 'browser:new-incognito' },
   { label: 'Reopen Closed Tab', cat: 'Browser', key: '⌘⇧O', action: 'browser:reopen-tab' },

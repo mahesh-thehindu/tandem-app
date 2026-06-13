@@ -225,8 +225,12 @@ button {
 .draw-empty-ico { width: 56px; height: 56px; color: var(--app-draw); opacity: 0.85; margin-bottom: 4px; }
 .draw-empty h2 { margin: 0; font-size: 22px; color: var(--text); }
 .draw-empty p { margin: 0; font-size: 13.5px; }
-.draw-new-cta {
+.draw-cta-row {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
+}
+.draw-new-cta {
   height: 38px;
   padding: 0 22px;
   border: none;
@@ -238,6 +242,18 @@ button {
   transition: filter var(--fast);
 }
 .draw-new-cta:hover { filter: brightness(1.08); }
+.draw-plus-cta {
+  height: 38px;
+  padding: 0 20px;
+  border: 1px solid color-mix(in srgb, var(--app-draw) 55%, var(--border));
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--app-draw);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: background var(--fast), color var(--fast);
+}
+.draw-plus-cta:hover { background: color-mix(in srgb, var(--app-draw) 16%, transparent); }
 .draw-hint { margin-top: 14px; font-size: 11.5px; color: var(--text-dim); opacity: 0.7; }
 
 .topbar-grow {

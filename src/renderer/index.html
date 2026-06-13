@@ -45,11 +45,11 @@
         </button>
       </div>
 
-      <!-- Excalidraw whiteboard tab -->
+      <!-- Canvas (drawing) tab -->
       <div class="tab-cluster" id="draw-tabcluster" data-mode="draw" hidden>
         <button class="draw-tab" id="draw-tab" type="button">
           <svg viewBox="0 0 24 24"><path d="M4 20l4-1 9.5-9.5a2 2 0 0 0 0-2.8l-.2-.2a2 2 0 0 0-2.8 0L5 16z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          Whiteboard
+          <span id="draw-tab-label">Canvas</span>
         </button>
       </div>
 
@@ -140,10 +140,13 @@
         <div class="draw-stage" id="draw-stage">
           <div class="draw-empty" id="draw-empty">
             <svg viewBox="0 0 24 24" class="draw-empty-ico"><path d="M4 20l4-1 9.5-9.5a2 2 0 0 0 0-2.8l-.2-.2a2 2 0 0 0-2.8 0L5 16z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-            <h2>Whiteboard</h2>
-            <p>An infinite Excalidraw canvas for sketches and diagrams.</p>
-            <button class="draw-new-cta" id="draw-new-cta" type="button">New Whiteboard</button>
-            <span class="draw-hint">Powered by Excalidraw · drawings saved locally</span>
+            <h2>Canvas</h2>
+            <p>An infinite canvas for sketches and diagrams.</p>
+            <div class="draw-cta-row">
+              <button class="draw-new-cta" id="draw-new-cta" type="button">New Canvas</button>
+              <button class="draw-plus-cta" id="draw-plus-cta" type="button">Excalidraw+</button>
+            </div>
+            <span class="draw-hint">Saved locally · or use Excalidraw+ to sync &amp; collaborate</span>
           </div>
         </div>
       </section>

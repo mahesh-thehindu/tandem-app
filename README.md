@@ -20,7 +20,7 @@ A tabbed desktop app that unifies a **Chromium-style browser**, a **Warp-style t
   - **Markdown viewer** — open and read `.md` files as styled prose
   - True-color output (`COLORTERM`/`CLICOLOR`) so `ls`, `git`, prompts render vivid, not grey
 - **Code** — a tab running **real VS Code** via [code-server](https://github.com/coder/code-server): open a folder as a workspace and edit it with the full editor, extensions, and language features. Runs locally on loopback. (Requires `code-server`; the cask installs it automatically.)
-- **Whiteboard** — an **Excalidraw** canvas for sketches and diagrams, saved locally.
+- **Canvas** — an infinite drawing surface for sketches and diagrams (built on the open-source Excalidraw engine), saved locally. Includes an **Excalidraw+** option for cloud sync & collaboration.
 - **Per-app colors** — each workspace has an identity color (browser = blue, terminal = mint, code = amber, whiteboard = violet) shown on its tabs and in the `+` menu, so you can tell them apart at a glance.
 - **App themes** — Midnight / Graphite / Nord / Aurora reskin the whole UI (Settings ▸ Appearance), independent of the terminal theme
   - Bundles **MesloLGS NF**, so Powerline/Nerd-Font prompts (Powerlevel10k, Starship) render correctly instead of tofu
