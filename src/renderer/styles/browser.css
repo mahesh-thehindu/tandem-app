@@ -1,15 +1,5 @@
 /* ============ Chromium-style browser ============ */
 
-.chrome-tabstrip {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 40px;
-  padding: 0 8px;
-  background: var(--chrome-strip);
-}
-
 .chrome-tabs {
   display: flex;
   align-items: flex-end;
@@ -22,9 +12,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 33px;
-  width: 200px;
-  min-width: 54px;
+  height: 34px;
+  width: 198px;
+  min-width: 52px;
   padding: 0 8px 0 12px;
   border-radius: var(--r-md) var(--r-md) 0 0;
   background: transparent;
@@ -34,10 +24,12 @@
 }
 
 .chrome-tab:hover {
-  background: var(--surface-2);
+  background: color-mix(in srgb, var(--chrome-toolbar) 55%, transparent);
   color: var(--text-2);
 }
 
+/* Active tab takes the toolbar's color and sits flush at the bar's bottom edge,
+   so it visually merges into the toolbar directly below it. */
 .chrome-tab.is-active {
   background: var(--chrome-toolbar);
   color: var(--text);
@@ -241,7 +233,7 @@
   place-items: center;
   width: 28px;
   height: 28px;
-  margin-bottom: 3px;
+  margin: 0 0 3px 4px;
   border: none;
   border-radius: var(--r-sm);
   background: transparent;
@@ -253,7 +245,7 @@
 }
 
 .chrome-newtab:hover {
-  background: var(--surface-2);
+  background: var(--surface-hover);
   color: var(--text);
 }
 
@@ -262,7 +254,7 @@
   place-items: center;
   width: 26px;
   height: 26px;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   border: none;
   border-radius: var(--r-sm);
   background: transparent;
@@ -272,7 +264,7 @@
 }
 
 .chrome-tabsearch svg { width: 16px; height: 16px; }
-.chrome-tabsearch:hover { background: var(--surface-2); color: var(--text); }
+.chrome-tabsearch:hover { background: var(--surface-hover); color: var(--text); }
 
 /* downloads toolbar button + active badge */
 .dl-btn { position: relative; }

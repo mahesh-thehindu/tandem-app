@@ -7,8 +7,9 @@ import { TabManager, START_URL } from './tabs.js';
 
 export function initBrowser(root, ctx) {
   const els = {
-    tabs: root.querySelector('#chrome-tabs'),
-    newTab: root.querySelector('#chrome-newtab'),
+    // Tabs live in the shared #topbar now (outside this root), so look them up globally.
+    tabs: document.getElementById('chrome-tabs'),
+    newTab: document.getElementById('chrome-newtab'),
     stack: root.querySelector('#webview-stack'),
     omnibox: root.querySelector('#omnibox-input'),
     lock: root.querySelector('#omni-lock'),
@@ -20,7 +21,7 @@ export function initBrowser(root, ctx) {
     findCount: root.querySelector('#find-count'),
     back: root.querySelector('[data-act="browser:back"]'),
     fwd: root.querySelector('[data-act="browser:forward"]'),
-    tabSearch: root.querySelector('#chrome-tabsearch'),
+    tabSearch: document.getElementById('chrome-tabsearch'),
     dlBadge: root.querySelector('#dl-badge'),
     dlBtn: root.querySelector('#downloads-btn'),
   };

@@ -28,8 +28,8 @@
   --omnibox-bg: #16161d;
 
   /* ---- Geometry ---- */
-  --titlebar-h: 40px;
-  --traffic-lights: 78px;
+  --topbar-h: 46px;
+  --traffic-lights: 88px;
   --r-sm: 6px;
   --r-md: 9px;
   --r-lg: 13px;

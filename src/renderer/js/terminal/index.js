@@ -39,8 +39,9 @@ const FONT_MAX = 22;
 
 export function initTerminal(root, ctx) {
   const els = {
-    tabs: root.querySelector('#warp-tabs'),
-    newTab: root.querySelector('#warp-newtab'),
+    // Session tabs live in the shared #topbar (outside this root).
+    tabs: document.getElementById('warp-tabs'),
+    newTab: document.getElementById('warp-newtab'),
     surface: root.querySelector('#warp-sessions'),
   };
 

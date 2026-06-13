@@ -54,19 +54,28 @@ const terminal = initTerminal(terminalRoot, ctx);
 /* ---------------- Mode switching ---------------- */
 
 let mode = 'browser';
+const browserTabs = document.getElementById('browser-tabcluster');
+const terminalTabs = document.getElementById('terminal-tabcluster');
+const terminalTrail = document.getElementById('terminal-trail');
+
 function setMode(next) {
-  if (next === mode) {
-    (next === 'browser' ? browser : terminal).activate();
-    return;
-  }
   mode = next;
-  browserRoot.classList.toggle('is-hidden', next !== 'browser');
-  terminalRoot.classList.toggle('is-hidden', next !== 'terminal');
+  const isBrowser = next === 'browser';
+  browserRoot.classList.toggle('is-hidden', !isBrowser);
+  terminalRoot.classList.toggle('is-hidden', isBrowser);
+  // Swap which tab cluster (and trailing actions) the shared title bar shows.
+  browserTabs.hidden = !isBrowser;
+  terminalTabs.hidden = isBrowser;
+  terminalTrail.hidden = isBrowser;
   document.querySelectorAll('.mode-btn').forEach((b) => b.classList.toggle('is-active', b.dataset.mode === next));
-  (next === 'browser' ? browser : terminal).activate();
+  (isBrowser ? browser : terminal).activate();
 }
 document.querySelectorAll('.mode-btn').forEach((b) => {
   b.addEventListener('click', () => setMode(b.dataset.mode));
+});
+// Title-bar action buttons (e.g. the terminal command-palette button).
+document.querySelectorAll('#topbar [data-act]').forEach((b) => {
+  b.addEventListener('click', () => dispatch(b.dataset.act));
 });
 
 /* ---------------- Central action router ---------------- */

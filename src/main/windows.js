@@ -17,6 +17,7 @@ function createWindow() {
     ...WINDOW_DEFAULTS,
     backgroundColor: '#0e0e13',
     titleBarStyle: 'hiddenInset', // macOS: keep traffic lights, reclaim the bar
+    trafficLightPosition: { x: 20, y: 17 }, // center the lights in the 46px top bar
     webPreferences: {
       preload: path.join(__dirname, '..', 'preload', 'preload.js'),
       contextIsolation: true,

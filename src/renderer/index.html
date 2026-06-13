@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="styles/menu.css" />
   </head>
   <body>
-    <!-- Title bar: traffic-light gap + mode switch (Browser / Terminal) -->
-    <header id="titlebar">
+    <!-- Unified title bar: window controls + mode switch + tabs in one row -->
+    <header id="topbar">
       <div class="mode-switch" role="tablist" aria-label="Workspace">
         <button class="mode-btn is-active" data-mode="browser" role="tab" type="button">
           <svg viewBox="0 0 24 24" class="mode-ico" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -28,20 +28,40 @@
           Terminal
         </button>
       </div>
-      <div class="titlebar-fill"></div>
+
+      <div class="topbar-divider"></div>
+
+      <!-- Browser tabs (shown in Browser mode) -->
+      <div class="tab-cluster" id="browser-tabcluster">
+        <div class="chrome-tabs" id="chrome-tabs"></div>
+        <button class="chrome-newtab" id="chrome-newtab" title="New tab (⌘T)" type="button">+</button>
+        <button class="chrome-tabsearch" id="chrome-tabsearch" title="Search tabs" type="button">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Terminal session tabs (shown in Terminal mode) -->
+      <div class="tab-cluster" id="terminal-tabcluster" hidden>
+        <div class="warp-tabs" id="warp-tabs"></div>
+        <button class="warp-newtab" id="warp-newtab" title="New session (⌘⇧T)" type="button">+</button>
+      </div>
+
+      <div class="topbar-grow"></div>
+
+      <!-- Terminal trailing actions -->
+      <div class="topbar-trail" id="terminal-trail" hidden>
+        <button class="warp-toolbtn" data-act="palette:open" title="Command palette (⌘P)" type="button">
+          <svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2.5 2L7 14M12 14h5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="warp-toolbtn" id="warp-menu-btn" title="Menu" type="button">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </header>
 
     <main id="stage">
       <!-- ============ BROWSER (Chromium-style) ============ -->
       <section id="browser-mode" class="mode" aria-label="Browser">
-        <div class="chrome-tabstrip">
-          <div class="chrome-tabs" id="chrome-tabs"></div>
-          <button class="chrome-newtab" id="chrome-newtab" title="New tab (⌘T)" type="button">+</button>
-          <button class="chrome-tabsearch" id="chrome-tabsearch" title="Search tabs" type="button">
-            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-
         <div class="chrome-toolbar">
           <div class="nav-cluster">
             <button class="cbtn" data-act="browser:back" title="Back" type="button">
@@ -103,18 +123,6 @@
 
       <!-- ============ TERMINAL (Warp-style) ============ -->
       <section id="terminal-mode" class="mode is-hidden" aria-label="Terminal">
-        <div class="warp-tabstrip">
-          <div class="warp-tabs" id="warp-tabs"></div>
-          <button class="warp-newtab" id="warp-newtab" title="New session (⌘⇧T)" type="button">+</button>
-          <div class="warp-tabstrip-fill"></div>
-          <button class="warp-toolbtn" data-act="palette:open" title="Command palette (⌘P)" type="button">
-            <svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2.5 2L7 14M12 14h5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button class="warp-toolbtn" id="warp-menu-btn" title="Menu" type="button">
-            <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-
         <div class="warp-surface">
           <div class="warp-sessions" id="warp-sessions"></div>
         </div>

@@ -4,17 +4,6 @@
   background: var(--bg);
 }
 
-.warp-tabstrip {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 42px;
-  padding: 0 10px;
-  background: var(--surface-1);
-  border-bottom: 1px solid var(--border-soft);
-}
-
 .warp-tabs {
   display: flex;
   align-items: center;
@@ -100,10 +89,6 @@
 .warp-newtab:hover {
   background: var(--surface-2);
   color: var(--mint);
-}
-
-.warp-tabstrip-fill {
-  flex: 1;
 }
 
 .warp-toolbtn {

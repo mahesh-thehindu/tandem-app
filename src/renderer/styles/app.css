@@ -30,23 +30,27 @@ button {
   cursor: default;
 }
 
-/* ---------------- Title bar + mode switch ---------------- */
+/* ---------------- Unified title bar (window controls + mode + tabs) ---------------- */
 
-#titlebar {
-  height: var(--titlebar-h);
+#topbar {
+  height: var(--topbar-h);
   flex: 0 0 auto;
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  gap: 2px;
   padding-left: var(--traffic-lights);
   background: var(--chrome-strip);
   -webkit-app-region: drag;
+  position: relative;
+  z-index: 3;
 }
 
 .mode-switch {
+  align-self: center;
   display: flex;
-  gap: 3px;
+  gap: 2px;
   padding: 3px;
-  margin-left: 4px;
+  margin: 0 2px;
   background: var(--surface-1);
   border-radius: var(--r-md);
   -webkit-app-region: no-drag;
@@ -55,9 +59,9 @@ button {
 .mode-btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   height: 26px;
-  padding: 0 13px;
+  padding: 0 12px;
   border: none;
   border-radius: 7px;
   background: transparent;
@@ -86,9 +90,48 @@ button {
   height: 15px;
 }
 
-.titlebar-fill {
-  flex: 1;
-  height: 100%;
+.topbar-divider {
+  align-self: center;
+  width: 1px;
+  height: 18px;
+  margin: 0 6px 0 4px;
+  background: var(--border);
+}
+
+/* Tab clusters live in the title bar. Browser tabs bottom-align so the active
+   tab merges into the toolbar below; terminal pills center in the bar. */
+.tab-cluster {
+  align-self: flex-end;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 0;
+  flex: 0 1 auto;
+  -webkit-app-region: no-drag;
+}
+
+.tab-cluster[hidden] {
+  display: none;
+}
+
+#terminal-tabcluster {
+  align-self: center;
+  align-items: center;
+}
+
+.topbar-grow {
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 24px;
+}
+
+.topbar-trail {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 8px;
+  -webkit-app-region: no-drag;
 }
 
 /* ---------------- Stage / modes ---------------- */
