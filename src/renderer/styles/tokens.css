@@ -21,6 +21,12 @@
   --danger: #ff6b6b;
   --warn: #ffcf6b;
 
+  /* ---- Per-app identity colors (used for tab indicators + the + menu) ---- */
+  --app-browser: #6d9bff;     /* blue */
+  --app-terminal: #4fd6b8;    /* mint/green */
+  --app-code: #f6a350;        /* amber */
+  --app-draw: #a78bfa;        /* violet */
+
   /* ---- Chrome-specific ---- */
   --chrome-strip: #1a1b22;
   --chrome-tab: #25262f;

@@ -3,10 +3,12 @@
 import { initBrowser } from './browser/index.js';
 import { initTerminal } from './terminal/index.js';
 import { initCode } from './code/index.js';
+import { initDraw } from './draw/index.js';
 
 const browserRoot = document.getElementById('browser-mode');
 const terminalRoot = document.getElementById('terminal-mode');
 const codeRoot = document.getElementById('code-mode');
+const drawRoot = document.getElementById('draw-mode');
 
 /* ---------------- Toast ---------------- */
 
@@ -53,36 +55,38 @@ const ctx = { dispatch, toast, showPanel, hidePanel, currentPanel, showContextMe
 const browser = initBrowser(browserRoot, ctx);
 const terminal = initTerminal(terminalRoot, ctx);
 const code = initCode(codeRoot, ctx);
+const draw = initDraw(drawRoot, ctx);
 
 /* ---------------- Mode switching ---------------- */
 
 let mode = 'browser';
-const browserTabs = document.getElementById('browser-tabcluster');
-const terminalTabs = document.getElementById('terminal-tabcluster');
-const codeTabs = document.getElementById('code-tabcluster');
+const FEATURES = { browser, terminal, code, draw };
+const ROOTS = { browser: browserRoot, terminal: terminalRoot, code: codeRoot, draw: drawRoot };
+const CLUSTERS = {
+  browser: document.getElementById('browser-tabcluster'),
+  terminal: document.getElementById('terminal-tabcluster'),
+  code: document.getElementById('code-tabcluster'),
+  draw: document.getElementById('draw-tabcluster'),
+};
 const terminalTrail = document.getElementById('terminal-trail');
-const FEATURES = { browser, terminal, code };
+// Clusters that only appear once their workspace has content.
+const ON_DEMAND = { code: () => code.hasFolder(), draw: () => draw.hasBoard() };
 
 function setMode(next) {
   mode = next;
-  browserRoot.classList.toggle('is-hidden', next !== 'browser');
-  terminalRoot.classList.toggle('is-hidden', next !== 'terminal');
-  codeRoot.classList.toggle('is-hidden', next !== 'code');
-  // All tab clusters stay in the bar (unified). Dim the inactive ones so the
-  // active workspace stands out. The Code cluster only appears once a folder
-  // is open (or while Code is active).
-  browserTabs.classList.toggle('cluster-dim', next !== 'browser');
-  terminalTabs.classList.toggle('cluster-dim', next !== 'terminal');
-  codeTabs.hidden = !(next === 'code' || code.hasFolder());
-  codeTabs.classList.toggle('cluster-dim', next !== 'code');
+  for (const m of Object.keys(FEATURES)) {
+    ROOTS[m].classList.toggle('is-hidden', m !== next);
+    if (ON_DEMAND[m]) CLUSTERS[m].hidden = !(m === next || ON_DEMAND[m]());
+    CLUSTERS[m].classList.toggle('cluster-dim', m !== next);
+  }
   terminalTrail.hidden = next !== 'terminal';
   FEATURES[next].activate();
 }
 
 // Clicking any tab in a cluster switches to that workspace.
-browserTabs.addEventListener('mousedown', () => setMode('browser'), true);
-terminalTabs.addEventListener('mousedown', () => setMode('terminal'), true);
-codeTabs.addEventListener('mousedown', () => setMode('code'), true);
+for (const [m, el] of Object.entries(CLUSTERS)) {
+  el.addEventListener('mousedown', () => setMode(m), true);
+}
 
 // Title-bar action buttons (e.g. the terminal command-palette button).
 document.querySelectorAll('#topbar [data-act]').forEach((b) => {
@@ -92,12 +96,13 @@ document.querySelectorAll('#topbar [data-act]').forEach((b) => {
 /* ---------------- The "+" new-tab menu (replaces the mode toggle) ---------------- */
 
 const NEW_MENU = [
-  { label: 'New Browser Tab', key: '⌘T', action: 'browser:new-tab' },
-  { label: 'New Incognito Tab', key: '⌘⇧N', action: 'browser:new-incognito' },
+  { label: 'New Browser Tab', key: '⌘T', action: 'browser:new-tab', dot: 'var(--app-browser)' },
+  { label: 'New Incognito Tab', key: '⌘⇧N', action: 'browser:new-incognito', dot: '#a084e8' },
   { sep: true },
-  { label: 'New Terminal', key: '⌘⇧T', action: 'terminal:new-session' },
+  { label: 'New Terminal', key: '⌘⇧T', action: 'terminal:new-session', dot: 'var(--app-terminal)' },
   { sep: true },
-  { label: 'New Code Workspace…', action: 'code:open-folder' },
+  { label: 'New Code Workspace…', action: 'code:open-folder', dot: 'var(--app-code)' },
+  { label: 'New Whiteboard', action: 'draw:new', dot: 'var(--app-draw)' },
 ];
 const newMenuEl = document.getElementById('new-menu');
 document.getElementById('ws-new').addEventListener('click', (e) => {
@@ -142,6 +147,11 @@ function dispatch(action) {
   if (action.startsWith('code:')) {
     if (mode !== 'code') setMode('code');
     code.handleCommand(action);
+    return;
+  }
+  if (action.startsWith('draw:')) {
+    if (mode !== 'draw') setMode('draw');
+    draw.handleCommand(action);
   }
 }
 
@@ -215,7 +225,8 @@ function renderMenu(el, spec) {
     if (item.zoom) { el.appendChild(buildZoomRow()); continue; }
     const btn = document.createElement('button');
     btn.className = 'menu-item';
-    btn.innerHTML = `<span class="mi-ico"></span><span class="mi-label">${item.label}</span>
+    const lead = item.dot ? `<span class="mi-dot" style="background:${item.dot}"></span>` : '<span class="mi-ico"></span>';
+    btn.innerHTML = `${lead}<span class="mi-label">${item.label}</span>
                      ${item.key ? `<span class="mi-key">${item.key}</span>` : ''}`;
     btn.addEventListener('click', () => dispatch(item.action));
     el.appendChild(btn);
@@ -425,7 +436,9 @@ const COMMANDS = [
   { label: 'Show Browser', cat: 'View', key: '⌘1', action: 'view:browser' },
   { label: 'Show Terminal', cat: 'View', key: '⌘2', action: 'view:terminal' },
   { label: 'Show Code', cat: 'View', key: '⌘3', action: 'view:code' },
+  { label: 'Show Whiteboard', cat: 'View', key: '⌘4', action: 'view:draw' },
   { label: 'Open Folder in Code', cat: 'Code', action: 'code:open-folder' },
+  { label: 'New Whiteboard', cat: 'Draw', action: 'draw:new' },
   { label: 'New Tab', cat: 'Browser', key: '⌘T', action: 'browser:new-tab' },
   { label: 'New Incognito Tab', cat: 'Browser', key: '⌘⇧N', action: 'browser:new-incognito' },
   { label: 'Reopen Closed Tab', cat: 'Browser', key: '⌘⇧O', action: 'browser:reopen-tab' },

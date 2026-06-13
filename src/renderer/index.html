@@ -45,6 +45,14 @@
         </button>
       </div>
 
+      <!-- Excalidraw whiteboard tab -->
+      <div class="tab-cluster" id="draw-tabcluster" data-mode="draw" hidden>
+        <button class="draw-tab" id="draw-tab" type="button">
+          <svg viewBox="0 0 24 24"><path d="M4 20l4-1 9.5-9.5a2 2 0 0 0 0-2.8l-.2-.2a2 2 0 0 0-2.8 0L5 16z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Whiteboard
+        </button>
+      </div>
+
       <div class="topbar-grow"></div>
 
       <!-- Terminal trailing actions -->
@@ -124,6 +132,19 @@
       <section id="terminal-mode" class="mode is-hidden" aria-label="Terminal">
         <div class="warp-surface">
           <div class="warp-sessions" id="warp-sessions"></div>
+        </div>
+      </section>
+
+      <!-- ============ EXCALIDRAW (whiteboard via webview) ============ -->
+      <section id="draw-mode" class="mode is-hidden" aria-label="Whiteboard">
+        <div class="draw-stage" id="draw-stage">
+          <div class="draw-empty" id="draw-empty">
+            <svg viewBox="0 0 24 24" class="draw-empty-ico"><path d="M4 20l4-1 9.5-9.5a2 2 0 0 0 0-2.8l-.2-.2a2 2 0 0 0-2.8 0L5 16z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <h2>Whiteboard</h2>
+            <p>An infinite Excalidraw canvas for sketches and diagrams.</p>
+            <button class="draw-new-cta" id="draw-new-cta" type="button">New Whiteboard</button>
+            <span class="draw-hint">Powered by Excalidraw · drawings saved locally</span>
+          </div>
         </div>
       </section>
 

@@ -115,9 +115,28 @@ button {
 }
 
 #terminal-tabcluster,
-#code-tabcluster {
+#code-tabcluster,
+#draw-tabcluster {
   align-self: center;
   align-items: center;
+}
+
+/* Each workspace carries its own identity color (--app). */
+#browser-tabcluster { --app: var(--app-browser); }
+#terminal-tabcluster { --app: var(--app-terminal); }
+#code-tabcluster { --app: var(--app-code); }
+#draw-tabcluster { --app: var(--app-draw); }
+
+/* Active-tab accent in the app's color. */
+.chrome-tab.is-active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 9px;
+  right: 9px;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--app, var(--accent));
 }
 
 /* Inactive workspaces' tabs dim so the active one stands out. */
@@ -147,6 +166,79 @@ button {
 .ws-new svg { width: 18px; height: 18px; }
 .ws-new:hover { background: var(--accent); color: var(--bg); }
 .ws-new:active { transform: scale(0.92); }
+
+/* Active terminal pill + code/draw tabs tinted with their app color. */
+.warp-tab.is-active { border-color: color-mix(in srgb, var(--app, var(--mint)) 55%, var(--border)); }
+.warp-tab.is-active .wt-dot { background: var(--app, var(--mint)); box-shadow: 0 0 8px var(--app, var(--mint)); }
+
+#code-tabcluster:not(.cluster-dim) .code-openbtn,
+#draw-tabcluster:not(.cluster-dim) .draw-tab {
+  border-color: color-mix(in srgb, var(--app) 55%, var(--border));
+  color: var(--app);
+}
+
+/* Whiteboard tab pill in the title bar */
+.draw-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background var(--fast), color var(--fast), border-color var(--fast);
+}
+.draw-tab svg { width: 15px; height: 15px; }
+.draw-tab:hover { background: var(--surface-hover); color: var(--text); }
+
+/* Whiteboard stage + empty state (mirrors Code) */
+.draw-stage {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 0;
+  background: var(--bg);
+}
+.draw-webview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+.draw-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--text-dim);
+}
+.draw-empty[hidden] { display: none; }
+.draw-empty-ico { width: 56px; height: 56px; color: var(--app-draw); opacity: 0.85; margin-bottom: 4px; }
+.draw-empty h2 { margin: 0; font-size: 22px; color: var(--text); }
+.draw-empty p { margin: 0; font-size: 13.5px; }
+.draw-new-cta {
+  margin-top: 10px;
+  height: 38px;
+  padding: 0 22px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--app-draw);
+  color: var(--bg);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: filter var(--fast);
+}
+.draw-new-cta:hover { filter: brightness(1.08); }
+.draw-hint { margin-top: 14px; font-size: 11.5px; color: var(--text-dim); opacity: 0.7; }
 
 .topbar-grow {
   flex: 1 1 auto;
