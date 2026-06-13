@@ -16,47 +16,33 @@
     <link rel="stylesheet" href="styles/menu.css" />
   </head>
   <body>
-    <!-- Unified title bar: window controls + mode switch + tabs in one row -->
+    <!-- Unified title bar: window controls + one "+" + all tabs in one row -->
     <header id="topbar">
-      <div class="mode-switch" role="tablist" aria-label="Workspace">
-        <button class="mode-btn is-active" data-mode="browser" role="tab" type="button">
-          <svg viewBox="0 0 24 24" class="mode-ico" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-          Browser
-        </button>
-        <button class="mode-btn" data-mode="terminal" role="tab" type="button">
-          <svg viewBox="0 0 24 24" class="mode-ico" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 9l3 2.5L7 14M12.5 14.5H16" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Terminal
-        </button>
-        <button class="mode-btn" data-mode="code" role="tab" type="button">
-          <svg viewBox="0 0 24 24" class="mode-ico" aria-hidden="true"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4M13 5l-2 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Code
-        </button>
-      </div>
+      <button id="ws-new" class="ws-new" title="New tab — browser, terminal, or code" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
 
       <div class="topbar-divider"></div>
 
-      <!-- Browser tabs (shown in Browser mode) -->
-      <div class="tab-cluster" id="browser-tabcluster">
+      <!-- Browser tabs -->
+      <div class="tab-cluster" id="browser-tabcluster" data-mode="browser">
         <div class="chrome-tabs" id="chrome-tabs"></div>
-        <button class="chrome-newtab" id="chrome-newtab" title="New tab (⌘T)" type="button">+</button>
         <button class="chrome-tabsearch" id="chrome-tabsearch" title="Search tabs" type="button">
           <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
 
-      <!-- Terminal session tabs (shown in Terminal mode) -->
-      <div class="tab-cluster" id="terminal-tabcluster" hidden>
+      <!-- Terminal session tabs -->
+      <div class="tab-cluster" id="terminal-tabcluster" data-mode="terminal">
         <div class="warp-tabs" id="warp-tabs"></div>
-        <button class="warp-newtab" id="warp-newtab" title="New session (⌘⇧T)" type="button">+</button>
       </div>
 
-      <!-- Code workspace controls (shown in Code mode) -->
-      <div class="tab-cluster" id="code-tabcluster" hidden>
+      <!-- Code workspace tab -->
+      <div class="tab-cluster" id="code-tabcluster" data-mode="code" hidden>
         <button class="code-openbtn" id="code-open" type="button">
           <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          Open Folder
+          <span class="code-folder" id="code-folder">Open Folder</span>
         </button>
-        <span class="code-folder" id="code-folder">No folder open</span>
       </div>
 
       <div class="topbar-grow"></div>
@@ -159,6 +145,7 @@
     <div class="dropdown" id="chrome-menu" hidden></div>
     <div class="dropdown" id="warp-menu" hidden></div>
     <div class="dropdown" id="context-menu" hidden></div>
+    <div class="dropdown" id="new-menu" hidden></div>
 
     <div class="palette-scrim" id="palette" hidden>
       <div class="palette">

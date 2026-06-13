@@ -55,7 +55,7 @@ export function initBrowser(root, ctx) {
 
   els.omnibox.addEventListener('keydown', (e) => { if (e.key === 'Enter') manager.navigate(els.omnibox.value); });
   els.omnibox.addEventListener('focus', () => els.omnibox.select());
-  els.newTab.addEventListener('click', () => manager.createTab());
+  els.newTab?.addEventListener('click', () => manager.createTab()); // legacy per-cluster + (now the unified +)
   els.tabSearch.addEventListener('click', (e) => ctx.showContextMenu(manager.tabList(), e.clientX - 40, e.clientY + 8));
   root.querySelectorAll('[data-act]').forEach((btn) => btn.addEventListener('click', () => ctx.dispatch(btn.dataset.act)));
 

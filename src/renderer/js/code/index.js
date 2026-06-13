@@ -39,7 +39,9 @@ export function initCode(root, ctx) {
     webview.src = url;
   }
 
-  document.getElementById('code-open').addEventListener('click', openFolder);
+  // The cluster button opens the picker only when no folder is open yet;
+  // otherwise it just acts as the tab (the cluster's mousedown switches mode).
+  document.getElementById('code-open').addEventListener('click', () => { if (!folder) openFolder(); });
   root.querySelector('#code-open-2')?.addEventListener('click', openFolder);
 
   function handleCommand(action) {

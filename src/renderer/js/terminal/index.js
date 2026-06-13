@@ -177,7 +177,7 @@ export function initTerminal(root, ctx) {
     for (const { session } of sessions.values()) session.setFontSize(fontSize);
   }
 
-  els.newTab.addEventListener('click', () => createSession());
+  els.newTab?.addEventListener('click', () => createSession()); // legacy + (now the unified +)
   window.addEventListener('resize', () => { if (!root.classList.contains('is-hidden')) active()?.fitAll(); });
 
   function handleCommand(action) {
@@ -206,10 +206,9 @@ export function initTerminal(root, ctx) {
     }
   }
 
-  let booted = false;
   function activate() {
-    if (!booted) { createSession(); booted = true; }
-    else active()?.activate();
+    // Sessions are created explicitly via the "+" menu; just refit/focus here.
+    active()?.activate();
   }
 
   return { handleCommand, activate, themeNames: () => THEME_NAMES, currentTheme: () => themeName };

@@ -68,20 +68,47 @@ function setMode(next) {
   browserRoot.classList.toggle('is-hidden', next !== 'browser');
   terminalRoot.classList.toggle('is-hidden', next !== 'terminal');
   codeRoot.classList.toggle('is-hidden', next !== 'code');
-  // Swap which tab cluster (and trailing actions) the shared title bar shows.
-  browserTabs.hidden = next !== 'browser';
-  terminalTabs.hidden = next !== 'terminal';
-  codeTabs.hidden = next !== 'code';
+  // All tab clusters stay in the bar (unified). Dim the inactive ones so the
+  // active workspace stands out. The Code cluster only appears once a folder
+  // is open (or while Code is active).
+  browserTabs.classList.toggle('cluster-dim', next !== 'browser');
+  terminalTabs.classList.toggle('cluster-dim', next !== 'terminal');
+  codeTabs.hidden = !(next === 'code' || code.hasFolder());
+  codeTabs.classList.toggle('cluster-dim', next !== 'code');
   terminalTrail.hidden = next !== 'terminal';
-  document.querySelectorAll('.mode-btn').forEach((b) => b.classList.toggle('is-active', b.dataset.mode === next));
   FEATURES[next].activate();
 }
-document.querySelectorAll('.mode-btn').forEach((b) => {
-  b.addEventListener('click', () => setMode(b.dataset.mode));
-});
+
+// Clicking any tab in a cluster switches to that workspace.
+browserTabs.addEventListener('mousedown', () => setMode('browser'), true);
+terminalTabs.addEventListener('mousedown', () => setMode('terminal'), true);
+codeTabs.addEventListener('mousedown', () => setMode('code'), true);
+
 // Title-bar action buttons (e.g. the terminal command-palette button).
 document.querySelectorAll('#topbar [data-act]').forEach((b) => {
   b.addEventListener('click', () => dispatch(b.dataset.act));
+});
+
+/* ---------------- The "+" new-tab menu (replaces the mode toggle) ---------------- */
+
+const NEW_MENU = [
+  { label: 'New Browser Tab', key: '⌘T', action: 'browser:new-tab' },
+  { label: 'New Incognito Tab', key: '⌘⇧N', action: 'browser:new-incognito' },
+  { sep: true },
+  { label: 'New Terminal', key: '⌘⇧T', action: 'terminal:new-session' },
+  { sep: true },
+  { label: 'New Code Workspace…', action: 'code:open-folder' },
+];
+const newMenuEl = document.getElementById('new-menu');
+document.getElementById('ws-new').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (!newMenuEl.hidden) { closeDropdowns(); return; }
+  renderMenu(newMenuEl, NEW_MENU);
+  const r = e.currentTarget.getBoundingClientRect();
+  newMenuEl.hidden = false;
+  newMenuEl.style.top = `${r.bottom + 6}px`;
+  newMenuEl.style.left = `${r.left}px`;
+  newMenuEl.style.right = 'auto';
 });
 
 /* ---------------- Central action router ---------------- */
@@ -224,6 +251,8 @@ function closeDropdowns() {
   chromeMenuEl.hidden = true;
   warpMenuEl.hidden = true;
   contextMenuEl.hidden = true;
+  const nm = document.getElementById('new-menu');
+  if (nm) nm.hidden = true;
 }
 
 /* ---------------- Context menu (tabs / groups) ---------------- */

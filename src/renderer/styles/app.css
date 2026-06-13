@@ -114,10 +114,39 @@ button {
   display: none;
 }
 
-#terminal-tabcluster {
+#terminal-tabcluster,
+#code-tabcluster {
   align-self: center;
   align-items: center;
 }
+
+/* Inactive workspaces' tabs dim so the active one stands out. */
+.tab-cluster.cluster-dim {
+  opacity: 0.45;
+  transition: opacity var(--fast) var(--ease);
+}
+.tab-cluster.cluster-dim:hover {
+  opacity: 0.85;
+}
+
+/* The unified "+" new-tab button (replaces the mode toggle). */
+.ws-new {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin: 0 2px;
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--accent);
+  -webkit-app-region: no-drag;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.ws-new svg { width: 18px; height: 18px; }
+.ws-new:hover { background: var(--accent); color: var(--bg); }
+.ws-new:active { transform: scale(0.92); }
 
 .topbar-grow {
   flex: 1 1 auto;

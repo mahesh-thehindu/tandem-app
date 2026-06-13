@@ -4,7 +4,7 @@
 
 <h1 align="center">Tandem</h1>
 
-A tabbed desktop app that pairs a **Chromium-style browser** with a **Warp-style terminal**, in one window. macOS first, built so Windows and Linux are an incremental step rather than a rewrite.
+A tabbed desktop app that unifies a **Chromium-style browser**, a **Warp-style terminal**, and a **real VS Code** workspace in one window. One title bar, one tab strip — a single **`+`** opens a new browser tab, terminal, or code workspace, and every tab lives side by side (no mode toggle). macOS first, built so Windows and Linux are an incremental step rather than a rewrite.
 
 - **Browser** — the actual open-source Chromium engine (Electron `<webview>`) wrapped in a Chrome-style UI:
   - Multi-tab strip with favicons, **incognito tabs** (ephemeral session, never recorded to history), and **tab groups** (color, name, collapse, ungroup)
