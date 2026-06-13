@@ -114,11 +114,16 @@ button {
   display: none;
 }
 
-#terminal-tabcluster,
 #code-tabcluster,
 #draw-tabcluster {
   align-self: center;
   align-items: center;
+}
+
+/* Terminal tabs bottom-align so the active tab attaches to the terminal window. */
+#terminal-tabcluster {
+  align-self: flex-end;
+  align-items: flex-end;
 }
 
 /* Each workspace carries its own identity color (--app). */
@@ -171,29 +176,75 @@ button {
 .warp-tab.is-active { border-color: color-mix(in srgb, var(--app, var(--mint)) 55%, var(--border)); }
 .warp-tab.is-active .wt-dot { background: var(--app, var(--mint)); box-shadow: 0 0 8px var(--app, var(--mint)); }
 
-#code-tabcluster:not(.cluster-dim) .code-openbtn,
-#draw-tabcluster:not(.cluster-dim) .draw-tab {
+#code-tabcluster:not(.cluster-dim) .code-openbtn {
   border-color: color-mix(in srgb, var(--app) 55%, var(--border));
   color: var(--app);
 }
 
-/* Whiteboard tab pill in the title bar */
-.draw-tab {
+/* Canvas boards (pills) in the title bar */
+.draw-tabs { display: flex; align-items: center; gap: 4px; }
+.draw-board {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   height: 28px;
-  padding: 0 12px;
-  border: 1px solid var(--border);
+  padding: 0 6px 0 11px;
+  border: 1px solid transparent;
   border-radius: var(--r-md);
-  background: var(--surface-2);
-  color: var(--text-2);
+  background: transparent;
+  color: var(--text-dim);
   font-size: 12.5px;
-  font-weight: 500;
   transition: background var(--fast), color var(--fast), border-color var(--fast);
 }
-.draw-tab svg { width: 15px; height: 15px; }
-.draw-tab:hover { background: var(--surface-hover); color: var(--text); }
+.draw-board:hover { background: var(--surface-2); color: var(--text-2); }
+.draw-board.is-active {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--app-draw) 50%, var(--border));
+}
+.draw-board .db-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex: 0 0 7px; }
+.draw-board.is-active .db-dot { background: var(--app-draw); box-shadow: 0 0 8px var(--app-draw); }
+.draw-board .db-name { white-space: nowrap; }
+.draw-board .db-close {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: var(--text-dim);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity var(--fast), background var(--fast);
+}
+.draw-board:hover .db-close,
+.draw-board.is-active .db-close { opacity: 1; }
+.draw-board .db-close:hover { background: var(--surface-hover); color: var(--text); }
+.draw-board .db-rename {
+  width: 92px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  font-size: 12px;
+  outline: none;
+  padding: 0 6px;
+}
+.draw-newboard {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 18px;
+  line-height: 1;
+  transition: background var(--fast), color var(--fast);
+}
+.draw-newboard:hover { background: var(--surface-2); color: var(--app-draw); }
+.draw-webview.is-hidden { display: none; }
 
 /* Whiteboard stage + empty state (mirrors Code) */
 .draw-stage {

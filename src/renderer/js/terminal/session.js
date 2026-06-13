@@ -14,13 +14,8 @@ export class Session {
     this.activePane = null;
     this.el = document.createElement('div');
     this.el.className = 'warp-session';
+    // No in-window header — the attached tab already identifies the session.
     this.el.innerHTML = `
-      <div class="warp-session-head">
-        <span class="wsh-dots"><i></i><i></i><i></i></span>
-        <span class="wsh-title"><b>${ctx.shellName}</b> &nbsp;~</span>
-        <span class="wsh-blocks" title="Commands run"></span>
-        <span class="wsh-badge">live</span>
-      </div>
       <div class="session-body"></div>
       <div class="warp-hint">
         <span><kbd>⌘P</kbd> palette</span>
@@ -129,8 +124,9 @@ export class Session {
   }
 
   updateBlockCount() {
-    const n = this.activePane ? this.activePane.blocks.length : 0;
     const el = this.el.querySelector('.wsh-blocks');
+    if (!el) return; // header removed; nothing to update
+    const n = this.activePane ? this.activePane.blocks.length : 0;
     el.textContent = n ? `${n} ⌘` : '';
   }
 

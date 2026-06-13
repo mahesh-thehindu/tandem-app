@@ -11,28 +11,41 @@
 }
 
 .warp-tab {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 30px;
+  height: 34px;
   padding: 0 8px 0 12px;
-  border: 1px solid transparent;
-  border-radius: var(--r-md);
+  border: none;
+  border-radius: var(--r-md) var(--r-md) 0 0;
   background: transparent;
   color: var(--text-dim);
   font-size: 12.5px;
-  transition: background var(--fast), color var(--fast), border-color var(--fast);
+  transition: background var(--fast), color var(--fast);
 }
 
 .warp-tab:hover {
-  background: var(--surface-2);
+  background: color-mix(in srgb, var(--surface-1) 55%, transparent);
   color: var(--text-2);
 }
 
+/* Active session tab takes the terminal surface color and sits flush at the
+   bar's bottom edge, so it merges into the terminal window directly below. */
 .warp-tab.is-active {
-  background: var(--surface-3);
+  background: var(--surface-1);
   color: var(--text);
-  border-color: var(--border);
+}
+
+.warp-tab.is-active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 9px;
+  right: 9px;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--app-terminal);
 }
 
 .warp-tab .wt-dot {
@@ -118,7 +131,7 @@
 .warp-surface {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 14px;
+  padding: 0;
   display: flex;
 }
 
@@ -126,8 +139,8 @@
   flex: 1;
   position: relative;
   min-height: 0;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border);
+  border: none;
+  border-radius: 0;
   background:
     radial-gradient(120% 80% at 50% -10%, rgba(79, 214, 184, 0.06), transparent 60%),
     var(--surface-1);
