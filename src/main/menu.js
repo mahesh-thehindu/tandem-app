@@ -76,7 +76,6 @@ function buildMenu() {
         { label: 'Show Canvas', accelerator: 'CmdOrCtrl+4', click: () => send('view:draw') },
         { label: 'Open Folder in Code…', click: () => send('code:open-folder') },
         { label: 'New Canvas', click: () => send('draw:new') },
-        { label: 'Open Excalidraw+', click: () => send('draw:plus') },
         { type: 'separator' },
         { label: 'Reload Page', accelerator: 'CmdOrCtrl+R', click: () => send('browser:reload') },
         { label: 'Downloads', accelerator: 'CmdOrCtrl+Shift+J', click: () => send('browser:downloads') },

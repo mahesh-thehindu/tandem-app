@@ -102,9 +102,7 @@ const NEW_MENU = [
   { label: 'New Terminal', key: '⌘⇧T', action: 'terminal:new-session', dot: 'var(--app-terminal)' },
   { sep: true },
   { label: 'New Code Workspace…', action: 'code:open-folder', dot: 'var(--app-code)' },
-  { sep: true },
   { label: 'New Canvas', action: 'draw:new', dot: 'var(--app-draw)' },
-  { label: 'Excalidraw+', action: 'draw:plus', dot: 'var(--app-draw)' },
 ];
 const newMenuEl = document.getElementById('new-menu');
 document.getElementById('ws-new').addEventListener('click', (e) => {
@@ -441,7 +439,6 @@ const COMMANDS = [
   { label: 'Show Canvas', cat: 'View', key: '⌘4', action: 'view:draw' },
   { label: 'Open Folder in Code', cat: 'Code', action: 'code:open-folder' },
   { label: 'New Canvas', cat: 'Canvas', action: 'draw:new' },
-  { label: 'Open Excalidraw+', cat: 'Canvas', action: 'draw:plus' },
   { label: 'New Tab', cat: 'Browser', key: '⌘T', action: 'browser:new-tab' },
   { label: 'New Incognito Tab', cat: 'Browser', key: '⌘⇧N', action: 'browser:new-incognito' },
   { label: 'Reopen Closed Tab', cat: 'Browser', key: '⌘⇧O', action: 'browser:reopen-tab' },
