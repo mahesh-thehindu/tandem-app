@@ -67,10 +67,51 @@ export function initTerminal(root, ctx) {
     openUrl: ctx.openUrl,
     toast: ctx.toast,
     showContextMenu: ctx.showContextMenu,
+    bookmarkCommand: (text) => addBookmark(text),
     registerPane: (p) => panesById.set(p.id, p),
     unregisterPane: (p) => panesById.delete(p.id),
     onEmpty: (s) => closeSession(keyOf(s)),
   };
+
+  /* ---- command bookmarks (persisted) ---- */
+
+  const BM_KEY = 'tandem:cmd-bookmarks';
+  let bookmarks = loadBookmarks();
+  function loadBookmarks() { try { return JSON.parse(localStorage.getItem(BM_KEY)) || []; } catch { return []; } }
+  function saveBookmarks() { localStorage.setItem(BM_KEY, JSON.stringify(bookmarks)); }
+  function addBookmark(text) {
+    const t = (text || '').trim();
+    if (!t) { ctx.toast('Nothing to bookmark'); return; }
+    if (!bookmarks.includes(t)) {
+      bookmarks.unshift(t);
+      if (bookmarks.length > 100) bookmarks.pop();
+      saveBookmarks();
+    }
+    ctx.toast('Command bookmarked');
+    if (ctx.currentPanel && ctx.currentPanel() === 'Command Bookmarks') showBookmarks();
+  }
+  function removeBookmark(t) { bookmarks = bookmarks.filter((b) => b !== t); saveBookmarks(); showBookmarks(); }
+
+  function showBookmarks() {
+    ctx.showPanel('Command Bookmarks', (body) => {
+      if (!bookmarks.length) { body.innerHTML = '<div class="panel-empty">No bookmarked commands yet.<br><small>Right-click a terminal → “Bookmark command”.</small></div>'; return; }
+      for (const cmd of bookmarks) {
+        const row = document.createElement('div');
+        row.className = 'bm-row';
+        row.innerHTML = `<code class="bm-cmd"></code>
+          <div class="bm-actions">
+            <button class="dl-act" data-a="run">Run</button>
+            <button class="dl-act" data-a="insert">Insert</button>
+            <button class="dl-act" data-a="del" title="Delete">✕</button>
+          </div>`;
+        row.querySelector('.bm-cmd').textContent = cmd;
+        row.querySelector('[data-a="run"]').addEventListener('click', () => { active()?.typeIntoActive(cmd + '\r'); ctx.hidePanel(); });
+        row.querySelector('[data-a="insert"]').addEventListener('click', () => { active()?.typeIntoActive(cmd); ctx.hidePanel(); });
+        row.querySelector('[data-a="del"]').addEventListener('click', () => removeBookmark(cmd));
+        body.appendChild(row);
+      }
+    });
+  }
 
   function keyOf(session) {
     for (const [k, v] of sessions) if (v.session === session) return k;
@@ -153,6 +194,8 @@ export function initTerminal(root, ctx) {
       case 'terminal:prev-command': s?.jump(-1); break;
       case 'terminal:next-command': s?.jump(1); break;
       case 'terminal:copy-output': s?.copyOutput(); break;
+      case 'terminal:bookmark-command': addBookmark(s?.currentCommand()); break;
+      case 'terminal:command-bookmarks': showBookmarks(); break;
       case 'terminal:theme': cycleTheme(); break;
       case 'terminal:zoom-in': zoom(1); break;
       case 'terminal:zoom-out': zoom(-1); break;

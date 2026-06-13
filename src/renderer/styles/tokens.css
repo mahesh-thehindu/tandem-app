@@ -47,3 +47,66 @@
   /* ---- Elevation ---- */
   --shadow-pop: 0 12px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
 }
+
+/* ============ App themes (reskin the whole chrome) ============ */
+
+:root[data-theme="graphite"] {
+  --bg: #161619;
+  --surface-1: #1d1d22;
+  --surface-2: #25252b;
+  --surface-3: #2e2e35;
+  --surface-hover: #353640;
+  --border: #34343d;
+  --border-soft: #26262d;
+  --text: #eceef3;
+  --text-2: #c2c5cf;
+  --text-dim: #80838f;
+  --accent: #8fa6d6;
+  --accent-soft: #2a3047;
+  --chrome-strip: #19191d;
+  --chrome-tab: #2e2e35;
+  --chrome-toolbar: #25252b;
+  --omnibox-bg: #161619;
+}
+
+:root[data-theme="nord"] {
+  --bg: #2e3440;
+  --surface-1: #2e3440;
+  --surface-2: #3b4252;
+  --surface-3: #434c5e;
+  --surface-hover: #4c566a;
+  --border: #3b4252;
+  --border-soft: #353b49;
+  --text: #eceff4;
+  --text-2: #d8dee9;
+  --text-dim: #7b88a1;
+  --accent: #88c0d0;
+  --accent-soft: #3b4252;
+  --mint: #8fbcbb;
+  --mint-soft: #3b4252;
+  --chrome-strip: #2b303b;
+  --chrome-tab: #3b4252;
+  --chrome-toolbar: #3b4252;
+  --omnibox-bg: #2e3440;
+}
+
+:root[data-theme="aurora"] {
+  --bg: #141021;
+  --surface-1: #1b1630;
+  --surface-2: #221c3b;
+  --surface-3: #2c2449;
+  --surface-hover: #362c58;
+  --border: #2f274a;
+  --border-soft: #241e3a;
+  --text: #ece8fb;
+  --text-2: #c7bff0;
+  --text-dim: #8b80b5;
+  --accent: #c58af9;
+  --accent-soft: #2e2350;
+  --mint: #7ee0c8;
+  --mint-soft: #1d3a36;
+  --chrome-strip: #181226;
+  --chrome-tab: #2c2449;
+  --chrome-toolbar: #221c3b;
+  --omnibox-bg: #1b1630;
+}

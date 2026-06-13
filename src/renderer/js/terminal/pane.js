@@ -4,13 +4,22 @@
 // addons and OSC 133 command-block decorations (the colored status bars at the
 // left edge of each command, Warp-style).
 
+const ESC = '';
+const CR = '\r';
+const LF = '\n';
+const DEL = '';
+const CTRL_C = '';
+const CTRL_U = '';
+
 let seq = 0;
 
 export class Pane {
   constructor(ctx) {
-    this.ctx = ctx; // { api, theme, fontSize, onFocus, openUrl, registerPane, unregisterPane }
+    this.ctx = ctx; // { api, theme, fontSize, onFocus, openUrl, split, bookmarkCommand, ... }
     this.id = `pane-${++seq}`;
     this.blocks = [];
+    this.input = '';        // current line being typed (for bookmarking)
+    this.lastCommand = '';  // last command submitted
     this.el = document.createElement('div');
     this.el.className = 'warp-pane';
     this.el.innerHTML = `
@@ -50,9 +59,10 @@ export class Pane {
     term.parser.registerOscHandler(133, (data) => { this.onOsc(data); return true; });
 
     this.ctx.api.create({ id: this.id, cols: term.cols, rows: term.rows });
-    term.onData((d) => this.ctx.api.write(this.id, d));
+    term.onData((d) => { this.trackInput(d); this.ctx.api.write(this.id, d); });
     this.el.querySelector('.pane-term').addEventListener('mousedown', () => this.ctx.onFocus(this));
     term.textarea?.addEventListener('focus', () => this.ctx.onFocus(this));
+    this.el.addEventListener('contextmenu', (e) => this.openContextMenu(e));
 
     this.ctx.registerPane(this);
     this.wireFind();
@@ -60,6 +70,38 @@ export class Pane {
   }
 
   write(data) { this.term.write(data); }
+  type(text) { this.ctx.api.write(this.id, text); } // inject into the shell at the cursor
+
+  // Approximate the current input line so we can bookmark/copy the command.
+  trackInput(d) {
+    if (d === CR || d === LF) { const c = this.input.trim(); if (c) this.lastCommand = c; this.input = ''; return; }
+    if (d === CTRL_C || d === CTRL_U) { this.input = ''; return; }
+    if (d === DEL || d === '\b') { this.input = this.input.slice(0, -1); return; }
+    if (d.charCodeAt(0) === 0x1b) return; // escape sequences (arrows, etc.)
+    if (d.length === 1 && d.charCodeAt(0) < 0x20) return; // other control chars
+    this.input += d;
+  }
+  currentCommand() { return this.input.trim() || this.lastCommand; }
+
+  openContextMenu(e) {
+    e.preventDefault();
+    this.ctx.onFocus(this);
+    const sel = this.term.getSelection();
+    const items = [];
+    if (sel) {
+      items.push({ label: 'Copy', onClick: () => navigator.clipboard.writeText(sel) });
+      items.push({ label: 'Insert selection to input', onClick: () => this.type(sel) });
+      items.push({ sep: true });
+    }
+    items.push({ label: 'Paste', onClick: async () => { const t = await navigator.clipboard.readText(); if (t) this.type(t); } });
+    const cmd = this.currentCommand();
+    if (cmd) items.push({ label: 'Bookmark command', onClick: () => this.ctx.bookmarkCommand(cmd) });
+    items.push({ sep: true });
+    items.push({ label: 'Clear', onClick: () => this.term.clear() });
+    items.push({ label: 'Split right', onClick: () => this.ctx.split('row') });
+    items.push({ label: 'Split down', onClick: () => this.ctx.split('col') });
+    this.ctx.showContextMenu(items, e.clientX, e.clientY);
+  }
 
   /* ---- OSC 133 command blocks ---- */
 
@@ -131,8 +173,8 @@ export class Pane {
     };
     input.addEventListener('input', () => this.searchAddon.findNext(input.value, opts));
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') this.searchAddon.findNext(input.value, { ...opts, incremental: false });
       if (e.key === 'Enter' && e.shiftKey) this.searchAddon.findPrevious(input.value, opts);
+      else if (e.key === 'Enter') this.searchAddon.findNext(input.value, { ...opts, incremental: false });
       if (e.key === 'Escape') this._find.close();
     });
     bar.querySelector('[data-f="next"]').addEventListener('click', () => this.searchAddon.findNext(input.value, opts));

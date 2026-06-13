@@ -22,7 +22,14 @@ function createSession(webContents, { id, cols, rows }) {
     cols: cols || DEFAULT_COLS,
     rows: rows || DEFAULT_ROWS,
     cwd: os.homedir(),
-    env: { ...process.env, TERM_PROGRAM: 'Tandem', ...integrationEnv(shell) },
+    env: {
+      ...process.env,
+      TERM_PROGRAM: 'Tandem',
+      COLORTERM: 'truecolor', // advertise 24-bit color so prompts render vivid, not grey
+      CLICOLOR: '1', // colorize macOS/BSD ls
+      FORCE_COLOR: '1', // colorize node-based CLIs (npm, etc.)
+      ...integrationEnv(shell),
+    },
   });
 
   proc.onData((data) => {

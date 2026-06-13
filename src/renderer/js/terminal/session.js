@@ -40,11 +40,16 @@ export class Session {
 
   paneCtx() {
     return {
-      ...this.ctx,
+      ...this.ctx, // api, theme, fontSize, openUrl, toast, showContextMenu, bookmarkCommand, ...
       onFocus: (p) => this.setActivePane(p),
       onBlocks: () => this.updateBlockCount(),
+      split: (dir) => this.split(dir),
+      closePane: () => this.closePane(),
     };
   }
+
+  currentCommand() { return this.activePane?.currentCommand() || ''; }
+  typeIntoActive(text) { this.activePane?.type(text); }
 
   /* ---- tree ops ---- */
 

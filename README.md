@@ -15,6 +15,11 @@ A tabbed desktop app that pairs a **Chromium-style browser** with a **Warp-style
   - **Command blocks** — OSC 133 shell integration marks each command with a colored status bar (running / success / failure) and lets you **jump between commands** (`⌘↑`/`⌘↓`) and **copy a command's output**
   - **Split panes** — split right (`⌘D`) / down (`⌘⇧D`), focus-next (`⌘]`), close pane (`⌘⇧W`)
   - **In-terminal search** (`⌘F`), **clickable links** (open in the Browser), **themes** (Tokyo Night / Warp Dark / Solarized / Snow), **font zoom**
+  - **Command bookmarks** — save commands and re-run/insert them from a panel
+  - **Right-click menu** — copy, paste, **insert selection into the input at the cursor**, bookmark command, split
+  - **Markdown viewer** — open and read `.md` files as styled prose
+  - True-color output (`COLORTERM`/`CLICOLOR`) so `ls`, `git`, prompts render vivid, not grey
+- **App themes** — Midnight / Graphite / Nord / Aurora reskin the whole UI (Settings ▸ Appearance), independent of the terminal theme
   - Bundles **MesloLGS NF**, so Powerline/Nerd-Font prompts (Powerlevel10k, Starship) render correctly instead of tofu
   - Session tabs, a rounded block surface with a command counter + LIVE badge, and its own menu
 

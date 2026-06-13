@@ -28,6 +28,11 @@ contextBridge.exposeInMainWorld('tandem', {
     newWindow: () => ipcRenderer.send('window:new'),
   },
 
+  markdown: {
+    pick: () => ipcRenderer.invoke('md:pick'),
+    read: (path) => ipcRenderer.invoke('md:read', path),
+  },
+
   downloads: {
     open: (path) => ipcRenderer.send('download:open', { path }),
     showInFolder: (path) => ipcRenderer.send('download:show', { path }),

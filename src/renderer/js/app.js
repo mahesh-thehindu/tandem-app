@@ -92,6 +92,9 @@ function dispatch(action) {
   if (action === 'palette:open') { openPalette(); return; }
   if (action === 'window:new') { window.tandem.window.newWindow(); return; }
   if (action === 'app:settings') { showSettings(); return; }
+  if (action === 'md:view') { openMarkdown(); return; }
+  if (action === 'app:theme-cycle') { cycleAppTheme(); return; }
+  if (action.startsWith('app:theme:')) { setAppTheme(action.slice('app:theme:'.length)); return; }
   if (action.startsWith('stub:')) { toast(`${labelOf(action)} — coming soon`); return; }
   if (action.startsWith('browser:')) {
     if (mode !== 'browser') setMode('browser');
@@ -157,7 +160,12 @@ const WARP_MENU = [
   { label: 'Jump to next command', key: '⌘↓', action: 'terminal:next-command' },
   { label: 'Copy last command output', action: 'terminal:copy-output' },
   { sep: true },
-  { label: 'Cycle theme', action: 'terminal:theme' },
+  { label: 'Bookmark command', action: 'terminal:bookmark-command' },
+  { label: 'Command bookmarks…', action: 'terminal:command-bookmarks' },
+  { label: 'View Markdown file…', action: 'md:view' },
+  { sep: true },
+  { label: 'Cycle terminal theme', action: 'terminal:theme' },
+  { label: 'Appearance / themes…', action: 'app:settings' },
   { label: 'Command palette…', key: '⌘P', action: 'palette:open' },
 ];
 
@@ -262,14 +270,69 @@ document.addEventListener('mousedown', (e) => {
   if (!e.target.closest('.dropdown')) closeDropdowns();
 });
 
+/* ---------------- App themes ---------------- */
+
+// Each maps to a [data-theme] block in tokens.css; '' is the built-in default.
+const APP_THEMES = [
+  { id: '', name: 'Midnight', dot: '#6d9bff' },
+  { id: 'graphite', name: 'Graphite', dot: '#a0a4b8' },
+  { id: 'nord', name: 'Nord', dot: '#88c0d0' },
+  { id: 'aurora', name: 'Aurora', dot: '#c58af9' },
+];
+const THEME_KEY = 'tandem:app-theme';
+let appTheme = localStorage.getItem(THEME_KEY) || '';
+
+function applyAppTheme() {
+  if (appTheme) document.documentElement.dataset.theme = appTheme;
+  else delete document.documentElement.dataset.theme;
+}
+function setAppTheme(id) {
+  appTheme = id;
+  localStorage.setItem(THEME_KEY, id);
+  applyAppTheme();
+  const t = APP_THEMES.find((x) => x.id === id);
+  toast(`Theme: ${t ? t.name : 'Midnight'}`);
+  if (currentPanel() === 'Settings') showSettings();
+}
+function cycleAppTheme() {
+  const i = APP_THEMES.findIndex((x) => x.id === appTheme);
+  setAppTheme(APP_THEMES[(i + 1) % APP_THEMES.length].id);
+}
+applyAppTheme();
+
 /* ---------------- Settings panel ---------------- */
 
 function showSettings() {
   showPanel('Settings', (body) => {
+    // App theme picker
+    body.appendChild(sectionLabel('Appearance'));
+    const appRow = div('theme-grid');
+    for (const t of APP_THEMES) {
+      const b = document.createElement('button');
+      b.className = 'theme-chip' + (t.id === appTheme ? ' is-active' : '');
+      b.innerHTML = `<span class="theme-dot" style="background:${t.dot}"></span>${t.name}`;
+      b.addEventListener('click', () => setAppTheme(t.id));
+      appRow.appendChild(b);
+    }
+    body.appendChild(appRow);
+
+    // Terminal theme picker
+    body.appendChild(sectionLabel('Terminal theme'));
+    const termRow = div('theme-grid');
+    for (const name of terminal.themeNames()) {
+      const b = document.createElement('button');
+      b.className = 'theme-chip' + (name === terminal.currentTheme() ? ' is-active' : '');
+      b.textContent = name;
+      b.addEventListener('click', () => { dispatch(`terminal:theme:${name}`); showSettings(); });
+      termRow.appendChild(b);
+    }
+    body.appendChild(termRow);
+
+    // Info rows
+    body.appendChild(sectionLabel('About'));
     const rows = [
       ['Engine', 'Chromium (embedded) · node-pty shell'],
       ['Shell', window.tandem.platform === 'win32' ? 'powershell' : 'zsh -l'],
-      ['Theme', 'Tandem Dark'],
       ['Default search', 'DuckDuckGo'],
       ['Platform', window.tandem.platform],
     ];
@@ -280,6 +343,37 @@ function showSettings() {
     }
   });
 }
+
+function sectionLabel(text) {
+  const el = div('panel-section');
+  el.textContent = text;
+  return el;
+}
+
+/* ---------------- Markdown viewer ---------------- */
+
+const mdScrim = document.getElementById('md-viewer');
+const mdTitle = document.getElementById('md-title');
+const mdBody = document.getElementById('md-body');
+
+async function openMarkdown() {
+  const res = await window.tandem.markdown.pick();
+  if (!res) return;
+  if (res.error) { toast(`Cannot open: ${res.error}`); return; }
+  renderMarkdown(res.path, res.content);
+}
+function renderMarkdown(path, content) {
+  mdTitle.textContent = path.split('/').pop();
+  mdBody.innerHTML = window.marked.parse(content, { gfm: true, breaks: true });
+  // Markdown links should open in the browser, not navigate the app shell.
+  mdBody.querySelectorAll('a[href]').forEach((a) => {
+    a.addEventListener('click', (e) => { e.preventDefault(); openUrl(a.getAttribute('href')); closeMarkdown(); });
+  });
+  mdScrim.hidden = false;
+}
+function closeMarkdown() { mdScrim.hidden = true; }
+mdScrim.addEventListener('mousedown', (e) => { if (e.target === mdScrim) closeMarkdown(); });
+document.getElementById('md-close').addEventListener('click', closeMarkdown);
 
 /* ---------------- Command palette ---------------- */
 
@@ -328,6 +422,10 @@ const COMMANDS = [
   { label: 'Cycle Terminal Theme', cat: 'Terminal', action: 'terminal:theme' },
   { label: 'Terminal Zoom In', cat: 'Terminal', action: 'terminal:zoom-in' },
   { label: 'Terminal Zoom Out', cat: 'Terminal', action: 'terminal:zoom-out' },
+  { label: 'Bookmark Command', cat: 'Terminal', action: 'terminal:bookmark-command' },
+  { label: 'Command Bookmarks', cat: 'Terminal', action: 'terminal:command-bookmarks' },
+  { label: 'View Markdown File', cat: 'Terminal', action: 'md:view' },
+  { label: 'Change App Theme', cat: 'App', action: 'app:theme-cycle' },
   { label: 'New Window', cat: 'App', key: '⌘N', action: 'window:new' },
   { label: 'Settings', cat: 'App', key: '⌘,', action: 'app:settings' },
 ];
@@ -395,7 +493,12 @@ paletteScrim.addEventListener('mousedown', (e) => { if (e.target === paletteScri
 /* ---------------- Global keys ---------------- */
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { closeDropdowns(); if (!paletteScrim.hidden) closePalette(); if (!panelScrim.hidden) hidePanel(); }
+  if (e.key === 'Escape') {
+    closeDropdowns();
+    if (!paletteScrim.hidden) closePalette();
+    if (!panelScrim.hidden) hidePanel();
+    if (!mdScrim.hidden) closeMarkdown();
+  }
 });
 
 /* ---------------- Boot ---------------- */
