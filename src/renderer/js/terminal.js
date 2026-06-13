@@ -16,6 +16,10 @@ const THEME = {
   brightCyan: '#9af0e8', brightWhite: '#ffffff',
 };
 
+// Nerd Font first (Powerline + glyphs), then graceful fallbacks.
+const FONT_STACK = '"MesloLGS NF", ui-monospace, "SF Mono", Menlo, monospace';
+const FALLBACK_STACK = 'ui-monospace, "SF Mono", Menlo, monospace';
+
 export function initTerminal(root, ctx) {
   const els = {
     tabs: root.querySelector('#warp-tabs'),
@@ -58,9 +62,10 @@ export function initTerminal(root, ctx) {
     els.sessions.appendChild(dom);
 
     const term = new window.Terminal({
-      fontFamily: 'var(--font-mono), ui-monospace, Menlo, monospace',
+      fontFamily: FALLBACK_STACK,
       fontSize: 13,
-      lineHeight: 1.35,
+      lineHeight: 1.2,
+      letterSpacing: 0,
       cursorBlink: true,
       allowProposedApi: true,
       theme: THEME,
@@ -69,6 +74,20 @@ export function initTerminal(root, ctx) {
     term.loadAddon(fit);
     term.open(dom.querySelector('.warp-term'));
     fit.fit();
+
+    // Swap to the Nerd Font once it has loaded so xterm rebuilds its glyph
+    // atlas with the Powerline/Nerd glyphs available (avoids tofu).
+    Promise.all([
+      document.fonts.load('13px "MesloLGS NF"'),
+      document.fonts.load('italic 13px "MesloLGS NF"'),
+      document.fonts.load('700 13px "MesloLGS NF"'),
+    ]).then(() => {
+      try {
+        term.options.fontFamily = FONT_STACK;
+        fit.fit();
+        api.resize(id, term.cols, term.rows);
+      } catch (_e) { /* terminal may have been closed */ }
+    });
 
     api.create({ id, cols: term.cols, rows: term.rows });
     term.onData((data) => api.write(id, data));

@@ -1,0 +1,31 @@
+/* MesloLGS NF — the Powerlevel10k-recommended Nerd Font, bundled so prompts
+   with Powerline separators and Nerd-Font glyphs render instead of tofu. */
+
+@font-face {
+  font-family: "MesloLGS NF";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../assets/fonts/MesloLGS NF Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "MesloLGS NF";
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url("../assets/fonts/MesloLGS NF Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "MesloLGS NF";
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url("../assets/fonts/MesloLGS NF Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "MesloLGS NF";
+  font-style: italic;
+  font-weight: 700;
+  font-display: block;
+  src: url("../assets/fonts/MesloLGS NF Bold Italic.ttf") format("truetype");
+}

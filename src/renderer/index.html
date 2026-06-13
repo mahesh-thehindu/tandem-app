@@ -8,6 +8,7 @@
     />
     <title>Tandem</title>
     <link rel="stylesheet" href="../../node_modules/@xterm/xterm/css/xterm.css" />
+    <link rel="stylesheet" href="styles/fonts.css" />
     <link rel="stylesheet" href="styles/tokens.css" />
     <link rel="stylesheet" href="styles/app.css" />
     <link rel="stylesheet" href="styles/browser.css" />
@@ -36,6 +37,9 @@
         <div class="chrome-tabstrip">
           <div class="chrome-tabs" id="chrome-tabs"></div>
           <button class="chrome-newtab" id="chrome-newtab" title="New tab (⌘T)" type="button">+</button>
+          <button class="chrome-tabsearch" id="chrome-tabsearch" title="Search tabs" type="button">
+            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
 
         <div class="chrome-toolbar">
@@ -66,6 +70,14 @@
           </div>
 
           <div class="toolbar-actions">
+            <span class="incognito-pill" id="incognito-pill" hidden>
+              <svg viewBox="0 0 24 24"><path d="M5 14h14l-1.2-3.5a2 2 0 0 0-1.9-1.3H8.1a2 2 0 0 0-1.9 1.3z" fill="currentColor"/><circle cx="8" cy="17" r="2.4" fill="currentColor"/><circle cx="16" cy="17" r="2.4" fill="currentColor"/></svg>
+              Incognito
+            </span>
+            <button class="cbtn dl-btn" id="downloads-btn" data-act="browser:downloads" title="Downloads" type="button">
+              <svg viewBox="0 0 24 24"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="dl-badge" id="dl-badge" hidden></span>
+            </button>
             <button class="cbtn" data-act="browser:history" title="History" type="button">
               <svg viewBox="0 0 24 24"><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
             </button>
@@ -112,6 +124,7 @@
     <!-- ============ Overlays ============ -->
     <div class="dropdown" id="chrome-menu" hidden></div>
     <div class="dropdown" id="warp-menu" hidden></div>
+    <div class="dropdown" id="context-menu" hidden></div>
 
     <div class="palette-scrim" id="palette" hidden>
       <div class="palette">

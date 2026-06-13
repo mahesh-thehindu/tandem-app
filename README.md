@@ -6,8 +6,12 @@
 
 A tabbed desktop app that pairs a **Chromium-style browser** with a **Warp-style terminal**, in one window. macOS first, built so Windows and Linux are an incremental step rather than a rewrite.
 
-- **Browser** — the actual open-source Chromium engine (Electron `<webview>`) wrapped in a Chrome-style UI: multi-tab strip with favicons, an omnibox with a connection lock + bookmark star, back/forward/reload/home, a bookmarks bar, in-page find, zoom, and the `⋮` customize menu.
-- **Terminal** — a genuine login shell via `node-pty`, rendered with `xterm.js` in a Warp-inspired surface: session tabs, a rounded block surface with a session header + LIVE badge, a keyboard-hint strip, and its own menu.
+- **Browser** — the actual open-source Chromium engine (Electron `<webview>`) wrapped in a Chrome-style UI:
+  - Multi-tab strip with favicons, **incognito tabs** (ephemeral session, never recorded to history), and **tab groups** (color, name, collapse, ungroup)
+  - **Pin / duplicate / mute** tabs, **reopen closed tab**, and a **right-click tab context menu**
+  - Omnibox with connection-lock + bookmark star, back/forward/reload/home, bookmarks bar, in-page find, zoom
+  - **Real downloads** with live progress + open/show-in-folder, **print**, **view source**, per-tab **DevTools**, a **tab-search** list, history, and the `⋮` customize menu
+- **Terminal** — a genuine login shell via `node-pty`, rendered with `xterm.js` in a Warp-inspired surface. Bundles **MesloLGS NF**, so Powerline/Nerd-Font prompts (Powerlevel10k, Starship) render correctly instead of tofu. Session tabs, a rounded block surface with a LIVE badge, a keyboard-hint strip, and its own menu.
 
 ### Menus & shortcuts (merged from both apps)
 

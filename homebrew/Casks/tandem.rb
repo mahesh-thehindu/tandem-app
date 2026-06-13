@@ -1,6 +1,6 @@
 cask "tandem" do
   version "0.1.0"
-  sha256 "b972f2468777082b72076eea957cb7209de740ece70cc4d01a61427f7a84a682"
+  sha256 "5af548ca8374beca21b3ba37c8645f625aa0d09f5c5840691872a8075b22aaa3"
 
   # Local build produced by `npm run dist`. For a shared/public release,
   # replace this with a GitHub Releases URL (see homebrew/README.md).

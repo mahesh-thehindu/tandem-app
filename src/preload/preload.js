@@ -28,6 +28,21 @@ contextBridge.exposeInMainWorld('tandem', {
     newWindow: () => ipcRenderer.send('window:new'),
   },
 
+  downloads: {
+    open: (path) => ipcRenderer.send('download:open', { path }),
+    showInFolder: (path) => ipcRenderer.send('download:show', { path }),
+    cancel: (id) => ipcRenderer.send('download:cancel', { id }),
+    onEvent: (cb) => {
+      const channels = ['download:started', 'download:updated', 'download:done'];
+      const handlers = channels.map((c) => {
+        const h = (_event, msg) => cb(c.split(':')[1], msg);
+        ipcRenderer.on(c, h);
+        return [c, h];
+      });
+      return () => handlers.forEach(([c, h]) => ipcRenderer.removeListener(c, h));
+    },
+  },
+
   // Native menu bar -> renderer action routing.
   menu: {
     onCommand: (cb) => {

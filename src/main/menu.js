@@ -40,6 +40,7 @@ function buildMenu() {
       label: 'File',
       submenu: [
         { label: 'New Tab', accelerator: 'CmdOrCtrl+T', click: () => send('browser:new-tab') },
+        { label: 'New Incognito Tab', accelerator: 'CmdOrCtrl+Shift+N', click: () => send('browser:new-incognito') },
         { label: 'New Window', accelerator: 'CmdOrCtrl+N', click: () => createWindow() },
         {
           label: 'New Terminal Session',
@@ -47,6 +48,7 @@ function buildMenu() {
           click: () => send('terminal:new-session'),
         },
         { type: 'separator' },
+        { label: 'Reopen Closed Tab', accelerator: 'CmdOrCtrl+Shift+O', click: () => send('browser:reopen-tab') },
         { label: 'Close Tab', accelerator: 'CmdOrCtrl+W', click: () => send('browser:close-tab') },
         ...(isMac ? [] : [{ type: 'separator' }, { role: 'quit' }]),
       ],
@@ -72,6 +74,8 @@ function buildMenu() {
         { label: 'Show Terminal', accelerator: 'CmdOrCtrl+2', click: () => send('view:terminal') },
         { type: 'separator' },
         { label: 'Reload Page', accelerator: 'CmdOrCtrl+R', click: () => send('browser:reload') },
+        { label: 'Downloads', accelerator: 'CmdOrCtrl+Shift+J', click: () => send('browser:downloads') },
+        { label: 'View Source', accelerator: 'CmdOrCtrl+Alt+U', click: () => send('browser:view-source') },
         {
           label: 'Toggle Bookmarks Bar',
           accelerator: 'CmdOrCtrl+Shift+B',
@@ -83,7 +87,7 @@ function buildMenu() {
         { label: 'Actual Size', accelerator: 'CmdOrCtrl+0', click: () => send('browser:zoom-reset') },
         { type: 'separator' },
         { role: 'togglefullscreen' },
-        { role: 'toggleDevTools' },
+        { label: 'Developer Tools', accelerator: 'CmdOrCtrl+Alt+I', click: () => send('browser:devtools') },
       ],
     },
     {

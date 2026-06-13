@@ -1,6 +1,6 @@
 'use strict';
 
-import { initBrowser } from './browser.js';
+import { initBrowser } from './browser/index.js';
 import { initTerminal } from './terminal.js';
 
 const browserRoot = document.getElementById('browser-mode');
@@ -36,12 +36,15 @@ function showPanel(title, fill) {
 function hidePanel() {
   panelScrim.hidden = true;
 }
+function currentPanel() {
+  return panelScrim.hidden ? null : panelTitle.textContent;
+}
 panelScrim.addEventListener('mousedown', (e) => { if (e.target === panelScrim) hidePanel(); });
 document.getElementById('panel-close').addEventListener('click', hidePanel);
 
 /* ---------------- Context shared with feature modules ---------------- */
 
-const ctx = { dispatch, toast, showPanel, hidePanel };
+const ctx = { dispatch, toast, showPanel, hidePanel, currentPanel, showContextMenu };
 
 const browser = initBrowser(browserRoot, ctx);
 const terminal = initTerminal(terminalRoot, ctx);
@@ -98,19 +101,26 @@ const warpMenuEl = document.getElementById('warp-menu');
 
 const CHROME_MENU = [
   { label: 'New tab', key: '⌘T', action: 'browser:new-tab' },
+  { label: 'New incognito tab', key: '⌘⇧N', action: 'browser:new-incognito' },
   { label: 'New window', key: '⌘N', action: 'window:new' },
+  { label: 'Reopen closed tab', key: '⌘⇧O', action: 'browser:reopen-tab' },
+  { sep: true },
+  { label: 'Add tab to new group', action: 'browser:group' },
+  { label: 'Pin / unpin tab', action: 'browser:pin' },
+  { label: 'Duplicate tab', action: 'browser:duplicate' },
   { sep: true },
   { label: 'History', action: 'browser:history' },
-  { label: 'Downloads', key: '⌘⇧J', action: 'stub:downloads' },
+  { label: 'Downloads', key: '⌘⇧J', action: 'browser:downloads' },
   { label: 'Bookmark this tab', key: '⌘D', action: 'browser:bookmark' },
   { label: 'Show bookmarks bar', key: '⌘⇧B', action: 'browser:toggle-bookmarks' },
   { sep: true },
   { zoom: true },
   { label: 'Find…', key: '⌘F', action: 'browser:find' },
-  { label: 'Print…', key: '⌘P', action: 'stub:print' },
+  { label: 'Print…', action: 'browser:print' },
+  { label: 'View source', key: '⌘⌥U', action: 'browser:view-source' },
   { sep: true },
+  { label: 'Developer tools', key: '⌘⌥I', action: 'browser:devtools' },
   { label: 'Settings', action: 'app:settings' },
-  { label: 'Help', action: 'stub:help' },
 ];
 
 const WARP_MENU = [
@@ -168,6 +178,46 @@ function openDropdown(el, anchor) {
 function closeDropdowns() {
   chromeMenuEl.hidden = true;
   warpMenuEl.hidden = true;
+  contextMenuEl.hidden = true;
+}
+
+/* ---------------- Context menu (tabs / groups) ---------------- */
+
+const contextMenuEl = document.getElementById('context-menu');
+
+// items: {label,onClick,danger,swatchColor} | {sep} | {section} | {swatches,onPick}
+function showContextMenu(items, x, y) {
+  closeDropdowns();
+  contextMenuEl.innerHTML = '';
+  for (const it of items) {
+    if (it.sep) { contextMenuEl.appendChild(div('menu-sep')); continue; }
+    if (it.section) { const s = div('menu-section'); s.textContent = it.section; contextMenuEl.appendChild(s); continue; }
+    if (it.swatches) { contextMenuEl.appendChild(buildSwatchRow(it)); continue; }
+    const btn = document.createElement('button');
+    btn.className = 'menu-item' + (it.danger ? ' danger' : '');
+    const dot = it.swatchColor ? `<span class="mi-swatch" style="background:${it.swatchColor}"></span>` : '<span class="mi-ico"></span>';
+    btn.innerHTML = `${dot}<span class="mi-label">${it.label}</span>`;
+    btn.addEventListener('click', () => { closeDropdowns(); it.onClick && it.onClick(); });
+    contextMenuEl.appendChild(btn);
+  }
+  contextMenuEl.hidden = false;
+  const w = contextMenuEl.offsetWidth || 248;
+  const h = contextMenuEl.offsetHeight || 320;
+  contextMenuEl.style.right = 'auto';
+  contextMenuEl.style.left = `${Math.min(x, window.innerWidth - w - 8)}px`;
+  contextMenuEl.style.top = `${Math.min(y, window.innerHeight - h - 8)}px`;
+}
+
+function buildSwatchRow(it) {
+  const row = div('menu-swatches');
+  for (const c of it.swatches) {
+    const b = document.createElement('button');
+    b.className = 'swatch';
+    b.style.background = c;
+    b.addEventListener('click', (e) => { e.stopPropagation(); closeDropdowns(); it.onPick(c); });
+    row.appendChild(b);
+  }
+  return row;
 }
 
 document.getElementById('chrome-menu-btn').addEventListener('click', (e) => {
@@ -215,6 +265,12 @@ const COMMANDS = [
   { label: 'Show Browser', cat: 'View', key: '⌘1', action: 'view:browser' },
   { label: 'Show Terminal', cat: 'View', key: '⌘2', action: 'view:terminal' },
   { label: 'New Tab', cat: 'Browser', key: '⌘T', action: 'browser:new-tab' },
+  { label: 'New Incognito Tab', cat: 'Browser', key: '⌘⇧N', action: 'browser:new-incognito' },
+  { label: 'Reopen Closed Tab', cat: 'Browser', key: '⌘⇧O', action: 'browser:reopen-tab' },
+  { label: 'Add Tab to New Group', cat: 'Browser', action: 'browser:group' },
+  { label: 'Pin / Unpin Tab', cat: 'Browser', action: 'browser:pin' },
+  { label: 'Duplicate Tab', cat: 'Browser', action: 'browser:duplicate' },
+  { label: 'Mute / Unmute Tab', cat: 'Browser', action: 'browser:mute' },
   { label: 'Close Tab', cat: 'Browser', key: '⌘W', action: 'browser:close-tab' },
   { label: 'Reload Page', cat: 'Browser', key: '⌘R', action: 'browser:reload' },
   { label: 'Back', cat: 'Browser', action: 'browser:back' },
@@ -227,6 +283,11 @@ const COMMANDS = [
   { label: 'Zoom Out', cat: 'Browser', action: 'browser:zoom-out' },
   { label: 'Reset Zoom', cat: 'Browser', action: 'browser:zoom-reset' },
   { label: 'Show History', cat: 'Browser', action: 'browser:history' },
+  { label: 'Show Downloads', cat: 'Browser', key: '⌘⇧J', action: 'browser:downloads' },
+  { label: 'Search Tabs', cat: 'Browser', action: 'browser:tab-search' },
+  { label: 'Print', cat: 'Browser', action: 'browser:print' },
+  { label: 'View Source', cat: 'Browser', action: 'browser:view-source' },
+  { label: 'Developer Tools', cat: 'Browser', action: 'browser:devtools' },
   { label: 'New Terminal Session', cat: 'Terminal', key: '⌘⇧T', action: 'terminal:new-session' },
   { label: 'Clear Session', cat: 'Terminal', key: '⌘K', action: 'terminal:clear' },
   { label: 'Close Session', cat: 'Terminal', action: 'terminal:close-session' },

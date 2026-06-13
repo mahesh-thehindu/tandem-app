@@ -258,6 +258,56 @@ button {
   color: var(--text-dim);
 }
 
+/* ---- Downloads panel rows ---- */
+
+.dl-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: var(--r-sm);
+}
+
+.dl-row:hover { background: var(--surface-2); }
+
+.dl-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dl-bar {
+  height: 4px;
+  margin-top: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.dl-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s var(--ease);
+}
+
+.dl-actions { display: flex; gap: 4px; flex: 0 0 auto; }
+
+.dl-act {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 12px;
+  transition: background var(--fast), color var(--fast);
+}
+
+.dl-act:hover { background: var(--surface-hover); color: var(--text); }
+
 @keyframes fade {
   from { opacity: 0; }
 }

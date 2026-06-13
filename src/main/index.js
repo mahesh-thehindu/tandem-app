@@ -4,9 +4,11 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { createWindow } = require('./windows');
 const { buildMenu } = require('./menu');
 const { registerTerminalIpc, killAll } = require('./terminal/pty-manager');
+const { registerDownloads } = require('./downloads');
 
 app.whenReady().then(() => {
   registerTerminalIpc();
+  registerDownloads();
   buildMenu();
   createWindow();
 
