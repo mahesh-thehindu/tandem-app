@@ -11,7 +11,14 @@ A tabbed desktop app that pairs a **Chromium-style browser** with a **Warp-style
   - **Pin / duplicate / mute** tabs, **reopen closed tab**, and a **right-click tab context menu**
   - Omnibox with connection-lock + bookmark star, back/forward/reload/home, bookmarks bar, in-page find, zoom
   - **Real downloads** with live progress + open/show-in-folder, **print**, **view source**, per-tab **DevTools**, a **tab-search** list, history, and the `⋮` customize menu
-- **Terminal** — a genuine login shell via `node-pty`, rendered with `xterm.js` in a Warp-inspired surface. Bundles **MesloLGS NF**, so Powerline/Nerd-Font prompts (Powerlevel10k, Starship) render correctly instead of tofu. Session tabs, a rounded block surface with a LIVE badge, a keyboard-hint strip, and its own menu.
+- **Terminal** — a genuine login shell via `node-pty`, rendered with `xterm.js` in a Warp-inspired surface:
+  - **Command blocks** — OSC 133 shell integration marks each command with a colored status bar (running / success / failure) and lets you **jump between commands** (`⌘↑`/`⌘↓`) and **copy a command's output**
+  - **Split panes** — split right (`⌘D`) / down (`⌘⇧D`), focus-next (`⌘]`), close pane (`⌘⇧W`)
+  - **In-terminal search** (`⌘F`), **clickable links** (open in the Browser), **themes** (Tokyo Night / Warp Dark / Solarized / Snow), **font zoom**
+  - Bundles **MesloLGS NF**, so Powerline/Nerd-Font prompts (Powerlevel10k, Starship) render correctly instead of tofu
+  - Session tabs, a rounded block surface with a command counter + LIVE badge, and its own menu
+
+  > Shell integration injects via a wrapper `ZDOTDIR` that sources your real config first, so Powerlevel10k and friends keep working untouched.
 
 ### Menus & shortcuts (merged from both apps)
 

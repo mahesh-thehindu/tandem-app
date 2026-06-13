@@ -4,6 +4,7 @@ const os = require('os');
 const pty = require('node-pty');
 const { ipcMain } = require('electron');
 const { getDefaultShell, getShellArgs } = require('./shell');
+const { integrationEnv } = require('./shell-integration');
 
 const DEFAULT_COLS = 80;
 const DEFAULT_ROWS = 24;
@@ -15,12 +16,13 @@ const sessions = new Map();
 function createSession(webContents, { id, cols, rows }) {
   if (sessions.has(id)) return;
 
-  const proc = pty.spawn(getDefaultShell(), getShellArgs(), {
-    name: 'xterm-color',
+  const shell = getDefaultShell();
+  const proc = pty.spawn(shell, getShellArgs(), {
+    name: 'xterm-256color',
     cols: cols || DEFAULT_COLS,
     rows: rows || DEFAULT_ROWS,
     cwd: os.homedir(),
-    env: process.env,
+    env: { ...process.env, TERM_PROGRAM: 'Tandem', ...integrationEnv(shell) },
   });
 
   proc.onData((data) => {

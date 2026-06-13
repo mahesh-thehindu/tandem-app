@@ -225,6 +225,7 @@ export function initBrowser(root, ctx) {
     handleCommand,
     activate: () => manager.activeTab()?.webview.focus(),
     zoomPercent: () => manager.zoomPercent(),
+    openUrl: (url) => manager.createTab({ url }),
   };
 }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 import { initBrowser } from './browser/index.js';
-import { initTerminal } from './terminal.js';
+import { initTerminal } from './terminal/index.js';
 
 const browserRoot = document.getElementById('browser-mode');
 const terminalRoot = document.getElementById('terminal-mode');
@@ -44,7 +44,9 @@ document.getElementById('panel-close').addEventListener('click', hidePanel);
 
 /* ---------------- Context shared with feature modules ---------------- */
 
-const ctx = { dispatch, toast, showPanel, hidePanel, currentPanel, showContextMenu };
+function openUrl(url) { setMode('browser'); browser.openUrl(url); }
+
+const ctx = { dispatch, toast, showPanel, hidePanel, currentPanel, showContextMenu, openUrl };
 
 const browser = initBrowser(browserRoot, ctx);
 const terminal = initTerminal(terminalRoot, ctx);
@@ -71,6 +73,12 @@ document.querySelectorAll('.mode-btn').forEach((b) => {
 
 function dispatch(action) {
   closeDropdowns();
+  // Context-aware shortcuts: same key, different meaning per mode.
+  if (action === 'find') return dispatch(mode === 'terminal' ? 'terminal:search' : 'browser:find');
+  if (action === 'cmd-d') return dispatch(mode === 'terminal' ? 'terminal:split-right' : 'browser:bookmark');
+  if (action === 'cmd-up') { if (mode === 'terminal') dispatch('terminal:prev-command'); return; }
+  if (action === 'cmd-down') { if (mode === 'terminal') dispatch('terminal:next-command'); return; }
+  if (action === 'cmd-shift-w') { if (mode === 'terminal') dispatch('terminal:close-pane'); else dispatch('browser:close-tab'); return; }
   if (action.startsWith('view:')) { setMode(action.slice(5)); return; }
   if (action === 'palette:open') { openPalette(); return; }
   if (action === 'window:new') { window.tandem.window.newWindow(); return; }
@@ -129,10 +137,19 @@ const WARP_MENU = [
   { label: 'Clear session', key: '⌘K', action: 'terminal:clear' },
   { label: 'Close session', action: 'terminal:close-session' },
   { sep: true },
-  { label: 'Command palette…', key: '⌘P', action: 'palette:open' },
-  { label: 'Split pane right', action: 'stub:split' },
+  { section: 'Panes' },
+  { label: 'Split right', key: '⌘D', action: 'terminal:split-right' },
+  { label: 'Split down', key: '⌘⇧D', action: 'terminal:split-down' },
+  { label: 'Focus next pane', key: '⌘]', action: 'terminal:focus-pane' },
+  { label: 'Close pane', key: '⌘⇧W', action: 'terminal:close-pane' },
   { sep: true },
-  { label: 'Settings', action: 'app:settings' },
+  { label: 'Find…', key: '⌘F', action: 'terminal:search' },
+  { label: 'Jump to previous command', key: '⌘↑', action: 'terminal:prev-command' },
+  { label: 'Jump to next command', key: '⌘↓', action: 'terminal:next-command' },
+  { label: 'Copy last command output', action: 'terminal:copy-output' },
+  { sep: true },
+  { label: 'Cycle theme', action: 'terminal:theme' },
+  { label: 'Command palette…', key: '⌘P', action: 'palette:open' },
 ];
 
 function renderMenu(el, spec) {
@@ -291,6 +308,17 @@ const COMMANDS = [
   { label: 'New Terminal Session', cat: 'Terminal', key: '⌘⇧T', action: 'terminal:new-session' },
   { label: 'Clear Session', cat: 'Terminal', key: '⌘K', action: 'terminal:clear' },
   { label: 'Close Session', cat: 'Terminal', action: 'terminal:close-session' },
+  { label: 'Split Pane Right', cat: 'Terminal', key: '⌘D', action: 'terminal:split-right' },
+  { label: 'Split Pane Down', cat: 'Terminal', key: '⌘⇧D', action: 'terminal:split-down' },
+  { label: 'Focus Next Pane', cat: 'Terminal', key: '⌘]', action: 'terminal:focus-pane' },
+  { label: 'Close Pane', cat: 'Terminal', key: '⌘⇧W', action: 'terminal:close-pane' },
+  { label: 'Find in Terminal', cat: 'Terminal', key: '⌘F', action: 'terminal:search' },
+  { label: 'Jump to Previous Command', cat: 'Terminal', key: '⌘↑', action: 'terminal:prev-command' },
+  { label: 'Jump to Next Command', cat: 'Terminal', key: '⌘↓', action: 'terminal:next-command' },
+  { label: 'Copy Last Command Output', cat: 'Terminal', action: 'terminal:copy-output' },
+  { label: 'Cycle Terminal Theme', cat: 'Terminal', action: 'terminal:theme' },
+  { label: 'Terminal Zoom In', cat: 'Terminal', action: 'terminal:zoom-in' },
+  { label: 'Terminal Zoom Out', cat: 'Terminal', action: 'terminal:zoom-out' },
   { label: 'New Window', cat: 'App', key: '⌘N', action: 'window:new' },
   { label: 'Settings', cat: 'App', key: '⌘,', action: 'app:settings' },
 ];
