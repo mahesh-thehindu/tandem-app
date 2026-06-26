@@ -68,6 +68,12 @@
       <!-- ============ BROWSER (Chromium-style) ============ -->
       <section id="browser-mode" class="mode" aria-label="Browser">
         <div class="chrome-toolbar">
+          <button class="ulaa-mode" id="ulaa-mode" title="Browsing mode" type="button">
+            <span class="um-dot"></span>
+            <span class="um-name" id="ulaa-mode-name">Personal Mode</span>
+            <svg class="um-caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
           <div class="nav-cluster">
             <button class="cbtn" data-act="browser:back" title="Back" type="button">
               <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -84,6 +90,10 @@
           </div>
 
           <div class="omnibox">
+            <button class="ulaa-shield" id="ulaa-shield" title="Tracker shield" type="button">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4-3 6.5-7 9-4-2.5-7-5-7-9V6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="shield-badge" id="ulaa-shield-badge" hidden>0</span>
+            </button>
             <span class="omni-lock" id="omni-lock" title="Connection">
               <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
             </span>
@@ -95,6 +105,12 @@
           </div>
 
           <div class="toolbar-actions">
+            <button class="cbtn" data-act="browser:notes" title="Notes" type="button">
+              <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h7M8 13h7M8 17h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <button class="cbtn" data-act="browser:capture" title="Capture &amp; annotate" type="button">
+              <svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L18 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="13" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
             <span class="incognito-pill" id="incognito-pill" hidden>
               <svg viewBox="0 0 24 24"><path d="M5 14h14l-1.2-3.5a2 2 0 0 0-1.9-1.3H8.1a2 2 0 0 0-1.9 1.3z" fill="currentColor"/><circle cx="8" cy="17" r="2.4" fill="currentColor"/><circle cx="16" cy="17" r="2.4" fill="currentColor"/></svg>
               Incognito

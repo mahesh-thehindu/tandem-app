@@ -21,8 +21,13 @@
   --danger: #ff6b6b;
   --warn: #ffcf6b;
 
+  /* ---- Ulaa brand ---- */
+  --ulaa: #ff5c39;            /* Ulaa coral */
+  --ulaa-2: #ff8a5c;
+  --ulaa-soft: rgba(255, 92, 57, 0.16);
+
   /* ---- Per-app identity colors (used for tab indicators + the + menu) ---- */
-  --app-browser: #6d9bff;     /* blue */
+  --app-browser: #ff5c39;     /* Ulaa coral */
   --app-terminal: #4fd6b8;    /* mint/green */
   --app-code: #f6a350;        /* amber */
   --app-draw: #a78bfa;        /* violet */

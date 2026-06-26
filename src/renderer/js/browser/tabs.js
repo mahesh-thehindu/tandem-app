@@ -4,7 +4,10 @@
 // pinned tabs, duplicate/mute, and the right-click context menus. Owns the
 // webviews (in a separate stack) and renders the Chrome-style tab strip.
 
-export const START_URL = 'https://duckduckgo.com';
+// The Ulaa "smart dashboard" new-tab page, resolved relative to this module so
+// it works both in dev and inside the packaged app.
+export const NEWTAB_URL = new URL('../../newtab/ulaa.html', import.meta.url).href;
+export const START_URL = NEWTAB_URL;
 const PERSIST = 'persist:tandem';
 const INCOGNITO = 'tandem-incognito'; // no persist: -> shared in-memory session
 const CLOSED_MAX = 25;
@@ -40,8 +43,11 @@ export class TabManager {
 
   /* ------------------------------------------------ creation */
 
-  createTab({ url = START_URL, incognito = false, groupId = null, index = null } = {}) {
+  _newTabUrl() { return this.ctx.newTabUrl ? this.ctx.newTabUrl() : START_URL; }
+
+  createTab({ url = null, incognito = false, groupId = null, index = null } = {}) {
     const id = nextId('tab');
+    url = url || this._newTabUrl();
     const webview = document.createElement('webview');
     webview.setAttribute('src', url);
     webview.setAttribute('partition', incognito ? INCOGNITO : PERSIST);
@@ -90,6 +96,10 @@ export class TabManager {
   /* ------------------------------------------------ activation / close */
 
   activeTab() { return this.tabs.get(this.activeId); }
+  activeWcId() {
+    const t = this.activeTab();
+    try { return t?.ready ? t.webview.getWebContentsId() : null; } catch { return null; }
+  }
   _indexOf(id) { return this.order.indexOf(id); }
 
   activate(id) {
@@ -145,7 +155,7 @@ export class TabManager {
   back() { const t = this.activeTab(); if (t?.ready && t.webview.canGoBack()) t.webview.goBack(); }
   forward() { const t = this.activeTab(); if (t?.ready && t.webview.canGoForward()) t.webview.goForward(); }
   reload() { const t = this.activeTab(); if (t?.ready) t.webview.reload(); }
-  home() { this.navigate(START_URL); }
+  home() { const t = this.activeTab(); const u = this._newTabUrl(); if (t?.ready && u) t.webview.loadURL(u); }
   canBack() { const t = this.activeTab(); try { return !!(t?.ready && t.webview.canGoBack()); } catch { return false; } }
   canForward() { const t = this.activeTab(); try { return !!(t?.ready && t.webview.canGoForward()); } catch { return false; } }
 

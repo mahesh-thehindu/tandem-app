@@ -173,6 +173,11 @@ const CHROME_MENU = [
   { label: 'New window', key: '⌘N', action: 'window:new' },
   { label: 'Reopen closed tab', key: '⌘⇧O', action: 'browser:reopen-tab' },
   { sep: true },
+  { label: 'Browsing mode…', action: 'browser:mode', dot: 'var(--ulaa)' },
+  { label: 'Privacy dashboard', action: 'browser:privacy', dot: 'var(--ulaa)' },
+  { label: 'Notes', action: 'browser:notes', dot: 'var(--ulaa)' },
+  { label: 'Capture & annotate', action: 'browser:capture', dot: 'var(--ulaa)' },
+  { sep: true },
   { label: 'Add tab to new group', action: 'browser:group' },
   { label: 'Pin / unpin tab', action: 'browser:pin' },
   { label: 'Duplicate tab', action: 'browser:duplicate' },
@@ -382,9 +387,11 @@ function showSettings() {
     // Info rows
     body.appendChild(sectionLabel('About'));
     const rows = [
-      ['Engine', 'Chromium (embedded) · node-pty shell'],
+      ['Browser', 'Ulaa-style · embedded Chromium engine'],
+      ['Browsing mode', browser.modeName()],
+      ['Tracker blocking', 'Multi-tier (ads, trackers, fingerprinting)'],
+      ['Default search', 'DuckDuckGo (private)'],
       ['Shell', window.tandem.platform === 'win32' ? 'powershell' : 'zsh -l'],
-      ['Default search', 'DuckDuckGo'],
       ['Platform', window.tandem.platform],
     ];
     for (const [t, s] of rows) {
@@ -460,6 +467,15 @@ const COMMANDS = [
   { label: 'Show History', cat: 'Browser', action: 'browser:history' },
   { label: 'Show Downloads', cat: 'Browser', key: '⌘⇧J', action: 'browser:downloads' },
   { label: 'Search Tabs', cat: 'Browser', action: 'browser:tab-search' },
+  { label: 'Browsing Mode…', cat: 'Ulaa', action: 'browser:mode' },
+  { label: 'Personal Mode', cat: 'Ulaa', action: 'browser:mode:personal' },
+  { label: 'Work Mode', cat: 'Ulaa', action: 'browser:mode:work' },
+  { label: 'Kids Mode', cat: 'Ulaa', action: 'browser:mode:kids' },
+  { label: 'Developer Mode', cat: 'Ulaa', action: 'browser:mode:developer' },
+  { label: 'Open Season Mode', cat: 'Ulaa', action: 'browser:mode:openseason' },
+  { label: 'Privacy Dashboard', cat: 'Ulaa', action: 'browser:privacy' },
+  { label: 'Notes', cat: 'Ulaa', action: 'browser:notes' },
+  { label: 'Capture & Annotate', cat: 'Ulaa', action: 'browser:capture' },
   { label: 'Print', cat: 'Browser', action: 'browser:print' },
   { label: 'View Source', cat: 'Browser', action: 'browser:view-source' },
   { label: 'Developer Tools', cat: 'Browser', action: 'browser:devtools' },

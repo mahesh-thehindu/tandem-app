@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <title>New Tab · Ulaa</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ulaa: #ff5c39;
+        --ulaa-2: #ff8a5c;
+        --bg: #0e0e13;
+        --surface: #16161d;
+        --surface-2: #1d1e27;
+        --border: #262732;
+        --text: #e6e8f0;
+        --dim: #8b8f9e;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(70% 55% at 50% -8%, rgba(255, 92, 57, 0.16), transparent 60%),
+          radial-gradient(60% 50% at 88% 110%, rgba(255, 138, 92, 0.08), transparent 60%),
+          var(--bg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* top status row */
+      .topline {
+        width: 100%;
+        max-width: 980px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 26px 0;
+      }
+      .mode-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--text);
+      }
+      .mode-chip i {
+        width: 8px; height: 8px; border-radius: 50%;
+        background: var(--ulaa); box-shadow: 0 0 10px var(--ulaa);
+      }
+      .shield-stat {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 13px;
+        color: var(--dim);
+      }
+      .shield-stat b { color: var(--text); font-weight: 700; }
+      .shield-stat svg { width: 17px; height: 17px; color: var(--ulaa); }
+
+      /* hero */
+      .hero { margin-top: 11vh; text-align: center; }
+      .wordmark {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 30px;
+      }
+      .wordmark .mark {
+        width: 58px; height: 58px;
+        border-radius: 17px;
+        display: grid; place-items: center;
+        background: linear-gradient(150deg, var(--ulaa), var(--ulaa-2));
+        color: #fff; font-weight: 800; font-size: 30px;
+        box-shadow: 0 10px 30px rgba(255, 92, 57, 0.35);
+      }
+      .wordmark .name { font-size: 40px; font-weight: 700; letter-spacing: -0.01em; }
+      .wordmark .name span { color: var(--ulaa); }
+      .tagline { color: var(--dim); font-size: 14.5px; margin: -18px 0 30px; }
+
+      /* search */
+      form.search {
+        width: min(620px, 84vw);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 6px 6px 18px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        transition: border-color 140ms, box-shadow 140ms;
+      }
+      form.search:focus-within {
+        border-color: var(--ulaa);
+        box-shadow: 0 0 0 4px rgba(255, 92, 57, 0.16);
+      }
+      form.search svg.lens { width: 19px; height: 19px; color: var(--dim); flex: 0 0 auto; }
+      form.search input {
+        flex: 1;
+        height: 44px;
+        border: none; outline: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 16px;
+      }
+      form.search input::placeholder { color: var(--dim); }
+      form.search button {
+        height: 44px;
+        padding: 0 22px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(150deg, var(--ulaa), var(--ulaa-2));
+        color: #fff;
+        font-size: 14.5px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      /* dials */
+      .dials {
+        width: min(720px, 88vw);
+        margin: 42px auto 0;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+      }
+      .dial {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 9px;
+        text-decoration: none;
+        color: var(--text);
+      }
+      .dial .tile {
+        width: 58px; height: 58px;
+        border-radius: 16px;
+        display: grid; place-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        font-size: 22px; font-weight: 700;
+        transition: transform 140ms, border-color 140ms, background 140ms;
+      }
+      .dial:hover .tile {
+        transform: translateY(-3px);
+        border-color: var(--ulaa);
+        background: var(--surface);
+      }
+      .dial .label {
+        font-size: 12px; color: var(--dim);
+        max-width: 72px; overflow: hidden;
+        text-overflow: ellipsis; white-space: nowrap;
+      }
+
+      .footer {
+        margin-top: auto;
+        padding: 26px;
+        color: var(--dim);
+        font-size: 12px;
+        text-align: center;
+      }
+      .footer b { color: var(--text); }
+
+      @media (max-width: 640px) {
+        .dials { grid-template-columns: repeat(4, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topline">
+      <span class="mode-chip"><i></i><span id="mode-name">Personal Mode</span></span>
+      <span class="shield-stat">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4-3 6.5-7 9-4-2.5-7-5-7-9V6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><b id="blocked-count">0</b> trackers blocked today</span>
+      </span>
+    </div>
+
+    <div class="hero">
+      <div class="wordmark">
+        <span class="mark">U</span>
+        <span class="name">Ula<span>a</span></span>
+      </div>
+      <p class="tagline">Private, secure, and superfast browsing.</p>
+
+      <form class="search" id="search" method="GET" action="https://duckduckgo.com/">
+        <svg class="lens" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="q" name="q" autocomplete="off" spellcheck="false" autofocus
+               placeholder="Search privately or type a URL" />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <nav class="dials" id="dials"></nav>
+
+    <div class="footer">
+      No trackers. No surveillance. <b>Your data stays yours.</b>
+    </div>
+
+    <script>
+      // Read state passed from the host renderer via query params.
+      const params = new URLSearchParams(location.search);
+      const mode = params.get('mode') || 'Personal Mode';
+      document.getElementById('mode-name').textContent = mode;
+      document.getElementById('blocked-count').textContent = params.get('blocked') || '0';
+
+      // A short, friendly URL gets navigated directly instead of searched.
+      const form = document.getElementById('search');
+      const q = document.getElementById('q');
+      form.addEventListener('submit', (e) => {
+        const v = q.value.trim();
+        if (/^https?:\/\//i.test(v) || /^[^\s.]+\.[^\s]{2,}$/.test(v)) {
+          e.preventDefault();
+          location.href = /^https?:\/\//i.test(v) ? v : 'https://' + v;
+        }
+      });
+
+      // Shortcut dials: most-visited from history if provided, else a default set.
+      const DEFAULTS = [
+        { title: 'GitHub', url: 'https://github.com' },
+        { title: 'Wikipedia', url: 'https://wikipedia.org' },
+        { title: 'YouTube', url: 'https://youtube.com' },
+        { title: 'Gmail', url: 'https://mail.google.com' },
+        { title: 'Maps', url: 'https://maps.google.com' },
+        { title: 'Zoho', url: 'https://zoho.com' },
+      ];
+      let sites = DEFAULTS;
+      try {
+        const raw = params.get('sites');
+        if (raw) {
+          const parsed = JSON.parse(decodeURIComponent(escape(atob(raw))));
+          if (Array.isArray(parsed) && parsed.length) sites = parsed.slice(0, 12);
+        }
+      } catch {}
+
+      const PALETTE = ['#ff5c39', '#6d9bff', '#4fd6b8', '#f6a350', '#a78bfa', '#ff8bcb'];
+      const dials = document.getElementById('dials');
+      sites.forEach((s, i) => {
+        let host = s.url;
+        try { host = new URL(s.url).hostname.replace(/^www\./, ''); } catch {}
+        const a = document.createElement('a');
+        a.className = 'dial';
+        a.href = s.url;
+        a.innerHTML =
+          '<span class="tile" style="color:' + PALETTE[i % PALETTE.length] + '">' +
+          (s.title || host).charAt(0).toUpperCase() + '</span>' +
+          '<span class="label">' + (s.title || host) + '</span>';
+        dials.appendChild(a);
+      });
+    </script>
+  </body>
+</html>

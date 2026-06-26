@@ -53,6 +53,18 @@ contextBridge.exposeInMainWorld('tandem', {
     },
   },
 
+  // Ulaa browser: privacy modes + content-blocker telemetry.
+  ulaa: {
+    setMode: (mode) => ipcRenderer.invoke('ulaa:set-mode', mode),
+    getMode: () => ipcRenderer.invoke('ulaa:get-mode'),
+    blockedCount: (wcId) => ipcRenderer.invoke('ulaa:blocked-count', wcId),
+    onBlocked: (cb) => {
+      const handler = (_event, msg) => cb(msg);
+      ipcRenderer.on('ulaa:blocked', handler);
+      return () => ipcRenderer.removeListener('ulaa:blocked', handler);
+    },
+  },
+
   // Native menu bar -> renderer action routing.
   menu: {
     onCommand: (cb) => {

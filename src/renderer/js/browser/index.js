@@ -1,9 +1,14 @@
 'use strict';
 
-import { TabManager, START_URL } from './tabs.js';
+import { TabManager, START_URL, NEWTAB_URL } from './tabs.js';
+import { ModeController } from './modes.js';
+import { PrivacyShield } from './privacy.js';
+import { openNotes } from './notes.js';
+import { captureAndAnnotate } from './annotator.js';
 
-// Wires the Chrome-style chrome (omnibox, nav cluster, bookmarks, find, history)
-// around the TabManager and exposes the command API used by the app router.
+// Wires the Ulaa chrome (mode selector, tracker shield, omnibox, nav cluster,
+// bookmarks, find, history, notes, capture) around the TabManager and exposes
+// the command API used by the app router.
 
 export function initBrowser(root, ctx) {
   const els = {
@@ -24,7 +29,73 @@ export function initBrowser(root, ctx) {
     tabSearch: document.getElementById('chrome-tabsearch'),
     dlBadge: root.querySelector('#dl-badge'),
     dlBtn: root.querySelector('#downloads-btn'),
+    modeBtn: root.querySelector('#ulaa-mode'),
+    modeDot: root.querySelector('#ulaa-mode .um-dot'),
+    modeName: root.querySelector('#ulaa-mode-name'),
+    shieldBtn: root.querySelector('#ulaa-shield'),
+    shieldBadge: root.querySelector('#ulaa-shield-badge'),
   };
+
+  /* -------- Ulaa privacy modes + tracker shield -------- */
+
+  const shield = new PrivacyShield(
+    { btn: els.shieldBtn, badge: els.shieldBadge },
+    () => manager.activeWcId(),
+  );
+
+  const modes = new ModeController((mode) => {
+    els.modeName.textContent = `${mode.name} Mode`;
+    els.modeDot.style.background = mode.dot;
+    root.dataset.ulaaMode = mode.id;
+    ctx.toast(`${mode.name} Mode`);
+    // Re-render the dashboard tab so blocking changes take effect immediately.
+    const t = manager.activeTab();
+    if (t?.ready) t.webview.reload();
+  });
+  els.modeName.textContent = modes.name();
+  els.modeDot.style.background = modes.mode().dot;
+  root.dataset.ulaaMode = modes.current;
+
+  els.modeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const r = els.modeBtn.getBoundingClientRect();
+    ctx.showContextMenu(modes.menu(), r.left, r.bottom + 6);
+  });
+  els.shieldBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    shield.openDashboard(ctx, modes);
+  });
+
+  // Build the dashboard URL carrying the current mode, today's block count, and
+  // the user's most-visited sites (so the NTP dials feel personal).
+  function newTabUrl() {
+    const sites = topSites();
+    const params = new URLSearchParams({
+      mode: modes.name(),
+      blocked: String(shield.blockedToday()),
+    });
+    if (sites.length) {
+      const json = JSON.stringify(sites);
+      params.set('sites', btoa(unescape(encodeURIComponent(json))));
+    }
+    return `${NEWTAB_URL}?${params.toString()}`;
+  }
+
+  function topSites() {
+    const counts = new Map();
+    for (const h of manager.history) {
+      try {
+        const host = new URL(h.url).hostname.replace(/^www\./, '');
+        if (!host || h.url.startsWith(NEWTAB_URL)) continue;
+        const cur = counts.get(host) || { title: host, url: `https://${host}`, n: 0 };
+        cur.n += 1;
+        cur.title = h.title || cur.title;
+        counts.set(host, cur);
+      } catch { /* skip non-http */ }
+    }
+    return [...counts.values()].sort((a, b) => b.n - a.n).slice(0, 8)
+      .map(({ title, url }) => ({ title, url }));
+  }
 
   const bookmarks = [
     { title: 'DuckDuckGo', url: 'https://duckduckgo.com' },
@@ -36,19 +107,24 @@ export function initBrowser(root, ctx) {
     showContextMenu: ctx.showContextMenu,
     onActiveChange: syncActive,
     toast: ctx.toast,
+    newTabUrl,
   });
 
-  /* -------- active-tab sync (omnibox, lock, star, incognito, nav) -------- */
+  /* -------- active-tab sync (omnibox, lock, star, incognito, shield, nav) -------- */
+
+  function isNewTab(url) { return !url || url.startsWith(NEWTAB_URL); }
 
   function syncActive(tab) {
     if (!tab) return;
-    els.omnibox.value = tab.url;
-    els.lock.classList.toggle('insecure', !tab.url.startsWith('https://'));
+    // On the dashboard, keep the omnibox empty so the page's own search leads.
+    els.omnibox.value = isNewTab(tab.url) ? '' : tab.url;
+    els.lock.classList.toggle('insecure', !tab.url.startsWith('https://') && !isNewTab(tab.url));
     els.star.classList.toggle('is-saved', bookmarks.some((b) => b.url === tab.url));
     els.incoPill.hidden = !tab.incognito;
     root.classList.toggle('is-incognito', !!tab.incognito);
     els.back.disabled = !manager.canBack();
     els.fwd.disabled = !manager.canForward();
+    shield.refresh();
   }
 
   /* -------- omnibox + nav cluster -------- */
@@ -216,7 +292,18 @@ export function initBrowser(root, ctx) {
       case 'browser:view-source': manager.viewSource(); break;
       case 'browser:devtools': manager.toggleDevtools(); break;
       case 'browser:tab-search': ctx.showContextMenu(manager.tabList(), window.innerWidth - 280, 96); break;
-      default: break;
+      case 'browser:notes': openNotes(ctx); break;
+      case 'browser:capture': captureAndAnnotate(manager.activeTab()?.webview, ctx.toast); break;
+      case 'browser:privacy': shield.openDashboard(ctx, modes); break;
+      case 'browser:mode': {
+        const r = els.modeBtn.getBoundingClientRect();
+        ctx.showContextMenu(modes.menu(), r.left, r.bottom + 6);
+        break;
+      }
+      default:
+        // Per-mode quick switch, e.g. "browser:mode:work".
+        if (action.startsWith('browser:mode:')) modes.set(action.slice('browser:mode:'.length));
+        break;
     }
   }
 
@@ -227,6 +314,8 @@ export function initBrowser(root, ctx) {
     activate: () => manager.activeTab()?.webview.focus(),
     zoomPercent: () => manager.zoomPercent(),
     openUrl: (url) => manager.createTab({ url }),
+    modeName: () => modes.name(),
+    setMode: (id) => modes.set(id),
   };
 }
 
