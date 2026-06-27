@@ -1,6 +1,6 @@
 cask "buckthorn-orbit" do
   version "0.1.0"
-  sha256 "2b0d797ec9ea2bb1b66494f634d04a88c413e71436aae786c43cd055d2cf3c67"
+  sha256 "625bc55bae365cdccf1711008f7a491e1393627bbcb855d2083390c1dbfe6198"
 
   # Local build produced by `npm run dist`. For a shared/public release,
   # replace this with a GitHub Releases URL (see homebrew/README.md).

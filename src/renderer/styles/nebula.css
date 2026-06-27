@@ -46,8 +46,10 @@
   background: var(--neb-blob-2);
 }
 
-/* Mode surfaces float above the blobs. */
-[data-theme="nebula"] #stage > .mode { position: relative; z-index: 1; }
+/* Mode surfaces float above the blobs. Keep .mode's base `position:absolute;
+   inset:0` (do NOT override to relative — that collapses the section to 0
+   height); z-index alone lifts it above the ::before/::after blobs. */
+[data-theme="nebula"] #stage > .mode { z-index: 1; }
 
 /* ---- Glass topbar ---- */
 

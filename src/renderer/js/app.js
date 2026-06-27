@@ -129,10 +129,20 @@ launcherScrim.addEventListener('mousedown', (e) => { if (e.target === launcherSc
 document.getElementById('ws-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
 document.getElementById('rail-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
 
-// Left-rail app buttons (and any [data-act] outside #topbar).
-document.querySelectorAll('#nebula-rail [data-act]').forEach((b) => {
-  b.addEventListener('click', () => dispatch(b.dataset.act));
+// Left-rail app buttons: switch to the app, and open default content if the
+// workspace is empty (terminal has no empty-state UI, so spin up a session).
+document.querySelectorAll('#nebula-rail .rail-app').forEach((b) => {
+  b.addEventListener('click', () => openApp(b.dataset.app));
 });
+
+function openApp(app) {
+  setMode(app);
+  if (app === 'terminal') {
+    const sessions = document.getElementById('warp-sessions');
+    if (!sessions || sessions.children.length === 0) dispatch('terminal:new-session');
+  }
+  // code / draw show their own empty-state CTAs; browser always has a tab.
+}
 
 function updateRail() {
   document.querySelectorAll('#nebula-rail .rail-app').forEach((b) => {
