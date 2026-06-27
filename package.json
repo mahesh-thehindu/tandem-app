@@ -1,6 +1,6 @@
 {
   "name": "tandem",
-  "productName": "Tandem",
+  "productName": "Buckthorn Orbit",
   "version": "0.1.0",
   "description": "A tabbed desktop app pairing an embedded Chromium browser with a real terminal. macOS first, cross-platform by design.",
   "main": "src/main/index.js",

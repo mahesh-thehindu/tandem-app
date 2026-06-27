@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Build Tandem.app from the local Electron runtime and package it into a DMG.
+# Build Buckthorn Orbit.app from the local Electron runtime and package it into a DMG.
 # This is a dependency-light alternative to electron-forge's packager: it clones
 # the Electron.app shell, injects our app + runtime node_modules, fixes the
 # Info.plist, ad-hoc signs (required to launch on Apple Silicon), and makes a DMG.
@@ -10,8 +10,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-APP_NAME="Tandem"
-BUNDLE_ID="com.tandem.app"
+# APP_NAME is the space-free bundle/exe/DMG base (keeps file:// paths clean);
+# DISPLAY_NAME is what users see in the menu bar and Finder.
+APP_NAME="BuckthornOrbit"
+DISPLAY_NAME="Buckthorn Orbit"
+BUNDLE_ID="com.buckthornorbit.app"
 VERSION="$(node -p "require('./package.json').version")"
 ARCH="$(uname -m)"            # arm64 or x86_64
 [ "$ARCH" = "x86_64" ] && ARCH="x64"
@@ -57,8 +60,8 @@ rm -f "$APP/Contents/Resources/electron.icns"
 echo "▸ Patching Info.plist…"
 PLIST="$APP/Contents/Info.plist"
 PB=/usr/libexec/PlistBuddy
-$PB -c "Set :CFBundleName $APP_NAME" "$PLIST"
-$PB -c "Set :CFBundleDisplayName $APP_NAME" "$PLIST"
+$PB -c "Set :CFBundleName $DISPLAY_NAME" "$PLIST"
+$PB -c "Set :CFBundleDisplayName $DISPLAY_NAME" "$PLIST"
 $PB -c "Set :CFBundleExecutable $APP_NAME" "$PLIST"
 $PB -c "Set :CFBundleIconFile tandem" "$PLIST"
 $PB -c "Set :CFBundleIdentifier $BUNDLE_ID" "$PLIST"
@@ -72,7 +75,7 @@ echo "▸ Building DMG…"
 STAGE="$(mktemp -d)"
 cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
-hdiutil create -volname "$APP_NAME" -srcfolder "$STAGE" -ov -format UDZO "$DMG" >/dev/null
+hdiutil create -volname "$DISPLAY_NAME" -srcfolder "$STAGE" -ov -format UDZO "$DMG" >/dev/null
 rm -rf "$STAGE"
 
 SHA="$(shasum -a 256 "$DMG" | awk '{print $1}')"

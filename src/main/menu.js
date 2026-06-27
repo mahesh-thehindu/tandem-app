@@ -139,7 +139,7 @@ function buildMenu() {
     {
       role: 'help',
       submenu: [
-        { label: 'Tandem on GitHub', click: () => shell.openExternal('https://github.com') },
+        { label: 'Buckthorn Orbit on GitHub', click: () => shell.openExternal('https://github.com') },
         { label: 'Keyboard Shortcuts', click: () => send('palette:open') },
       ],
     },

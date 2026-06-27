@@ -24,7 +24,7 @@ function createSession(webContents, { id, cols, rows }) {
     cwd: os.homedir(),
     env: {
       ...process.env,
-      TERM_PROGRAM: 'Tandem',
+      TERM_PROGRAM: 'BuckthornOrbit',
       COLORTERM: 'truecolor', // advertise 24-bit color so prompts render vivid, not grey
       CLICOLOR: '1', // colorize macOS/BSD ls
       FORCE_COLOR: '1', // colorize node-based CLIs (npm, etc.)

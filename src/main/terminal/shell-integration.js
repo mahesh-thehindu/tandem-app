@@ -31,7 +31,7 @@ function prepareZshIntegration() {
   const zshrc =
     sourceUser('.zshrc') +
     `
-# --- Tandem shell integration (OSC 133 command blocks) ---
+# --- Buckthorn Orbit shell integration (OSC 133 command blocks) ---
 if [[ -o interactive ]]; then
   __tandem_osc() { builtin printf '\\033]133;%s\\007' "$1"; }
   __tandem_precmd() { local __s=$?; __tandem_osc "D;$__s"; __tandem_osc "A"; }

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="build/icon-256.png" width="132" height="132" alt="Tandem (SVM) logo" />
+  <img src="build/icon-256.png" width="132" height="132" alt="Buckthorn Orbit logo" />
 </p>
 
-<h1 align="center">Tandem</h1>
+<h1 align="center">Buckthorn Orbit</h1>
 
 A tabbed desktop app that unifies a **Chromium-style browser**, a **Warp-style terminal**, and a **real VS Code** workspace in one window. One title bar, one tab strip — a single **`+`** opens a new browser tab, terminal, or code workspace, and every tab lives side by side (no mode toggle). macOS first, built so Windows and Linux are an incremental step rather than a rewrite.
 

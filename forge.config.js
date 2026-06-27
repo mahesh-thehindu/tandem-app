@@ -6,7 +6,7 @@
 module.exports = {
   packagerConfig: {
     asar: true,
-    name: 'Tandem',
+    name: 'Buckthorn Orbit',
   },
   rebuildConfig: {},
   makers: [
