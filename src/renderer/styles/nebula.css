@@ -1,0 +1,312 @@
+/* ============================================================
+   Nebula — Glass Desktop reskin (Option C)
+   Scoped to [data-theme="nebula"] so it only paints in this theme.
+   Structure: gradient stage + ambient blobs, glass topbar, a floating
+   bottom dock, and a full app-grid launcher modal.
+   ============================================================ */
+
+:root[data-theme="nebula"] {
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+[data-theme="nebula"] body {
+  background: var(--neb-gradient);
+}
+
+/* The whole app sits on the aurora gradient with two soft colour blobs. */
+[data-theme="nebula"] #stage {
+  position: relative;
+  background: var(--neb-gradient);
+  isolation: isolate;
+}
+
+[data-theme="nebula"] #stage::before,
+[data-theme="nebula"] #stage::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+[data-theme="nebula"] #stage::before {
+  width: 460px;
+  height: 460px;
+  top: -150px;
+  left: -90px;
+  background: var(--neb-blob-1);
+}
+
+[data-theme="nebula"] #stage::after {
+  width: 520px;
+  height: 520px;
+  bottom: -190px;
+  right: -120px;
+  background: var(--neb-blob-2);
+}
+
+/* Mode surfaces float above the blobs. */
+[data-theme="nebula"] #stage > .mode { position: relative; z-index: 1; }
+
+/* ---- Glass topbar ---- */
+
+[data-theme="nebula"] #topbar {
+  background: var(--neb-glass-strong);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+[data-theme="nebula"] .ws-new {
+  background: linear-gradient(135deg, #8b7cff, #6a5bff);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(124, 108, 255, 0.4);
+}
+[data-theme="nebula"] .ws-new:hover { filter: brightness(1.08); }
+
+/* Active tabs become frosted glass chips that read on the gradient. */
+[data-theme="nebula"] .chrome-tab.is-active {
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+}
+
+/* ---- Glass toolbars / surfaces ---- */
+
+[data-theme="nebula"] .chrome-toolbar,
+[data-theme="nebula"] .bookmarks-bar {
+  background: var(--neb-glass-strong);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+[data-theme="nebula"] .omnibox {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="nebula"] .warp-sessions {
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(124, 108, 255, 0.10), transparent 60%),
+    var(--neb-glass-2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Empty states get a glass card feel. */
+[data-theme="nebula"] .code-empty,
+[data-theme="nebula"] .draw-empty {
+  background: var(--neb-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 40px 48px;
+}
+
+/* Dropdowns, palette, panels — frosted. */
+[data-theme="nebula"] .dropdown,
+[data-theme="nebula"] .palette,
+[data-theme="nebula"] .panel {
+  background: var(--neb-glass-2);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid var(--border);
+}
+
+/* ============ Bottom dock ============ */
+
+#nebula-dock {
+  flex: 0 0 auto;
+  height: 60px;
+  display: none;            /* shown only in the Nebula theme */
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+}
+
+[data-theme="nebula"] #nebula-dock {
+  display: flex;
+  background: var(--neb-glass-strong);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border-top: 1px solid var(--border-soft);
+}
+
+.dock-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.dock-app {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  transition: transform var(--fast) var(--ease), box-shadow var(--fast);
+}
+.dock-app svg { width: 21px; height: 21px; }
+.dock-app:hover { transform: translateY(-3px); }
+
+.dock-app[data-app="browser"] { background: var(--neb-grad-browser); }
+.dock-app[data-app="terminal"] { background: var(--neb-grad-terminal); }
+.dock-app[data-app="code"] { background: var(--neb-grad-code); }
+.dock-app[data-app="draw"] { background: var(--neb-grad-draw); }
+
+/* Active app gets a lifted ring + a dot under it. */
+.dock-app.is-active {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55), 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+.dock-app.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.dock-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dock-new {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: #fff;
+  color: #5b3aa8;
+  font-size: 27px;
+  font-weight: 300;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  transition: transform var(--fast) var(--ease);
+}
+.dock-new:hover { transform: translateY(-3px) scale(1.04); }
+
+/* ============ App-grid launcher modal ============ */
+
+.launcher-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 14, 40, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: neb-fade var(--med) var(--ease);
+}
+
+@keyframes neb-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.launcher-card {
+  width: min(560px, 92vw);
+  border-radius: 24px;
+  background: rgba(30, 24, 56, 0.72);
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
+  padding: 34px;
+  color: #fff;
+  animation: neb-rise var(--med) var(--ease);
+}
+
+@keyframes neb-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.launcher-head { text-align: center; margin-bottom: 26px; }
+.launcher-head h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.launcher-head p { margin: 5px 0 0; font-size: 13.5px; color: rgba(255, 255, 255, 0.6); }
+
+.launcher-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.launcher-tile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  text-align: left;
+  transition: background var(--fast), border-color var(--fast), transform var(--fast) var(--ease);
+}
+
+.launcher-tile:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.launcher-tile.is-active {
+  background: rgba(124, 108, 255, 0.16);
+  border: 1.5px solid rgba(160, 140, 255, 0.6);
+  box-shadow: 0 0 0 4px rgba(124, 108, 255, 0.12);
+}
+
+.lt-icon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+.lt-icon svg { width: 26px; height: 26px; }
+.lt-icon[data-app="browser"] { background: var(--neb-grad-browser); }
+.lt-icon[data-app="terminal"] { background: var(--neb-grad-terminal); }
+.lt-icon[data-app="code"] { background: var(--neb-grad-code); }
+.lt-icon[data-app="draw"] { background: var(--neb-grad-draw); }
+
+.lt-text b { display: block; font-size: 16px; font-weight: 700; }
+.lt-text span { font-size: 12px; color: rgba(255, 255, 255, 0.6); }
+
+.launcher-foot {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.launcher-foot kbd {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+.launcher-foot .lf-spacer { margin-left: auto; font-weight: 600; color: rgba(255, 255, 255, 0.7); }

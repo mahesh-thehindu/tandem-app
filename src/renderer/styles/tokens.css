@@ -101,6 +101,48 @@
   --omnibox-bg: #2e3440;
 }
 
+/* Nebula — glass desktop over a purple→blue aurora gradient. The structural
+   glass (topbar, dock, launcher, panels) lives in nebula.css; these tokens
+   carry the palette so every existing component inherits the look. */
+:root[data-theme="nebula"] {
+  --bg: #241d44;
+  --surface-1: rgba(30, 24, 56, 0.66);
+  --surface-2: rgba(42, 34, 76, 0.74);
+  --surface-3: rgba(56, 46, 98, 0.82);
+  --surface-hover: rgba(255, 255, 255, 0.10);
+  --border: rgba(255, 255, 255, 0.14);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --text: #f3f1fb;
+  --text-2: #cbc6e8;
+  --text-dim: #9c95c6;
+  --accent: #8b7cff;
+  --accent-soft: rgba(124, 108, 255, 0.24);
+  --mint: #3fd9c0;
+  --mint-soft: rgba(63, 217, 192, 0.18);
+  --chrome-strip: rgba(18, 14, 38, 0.5);
+  --chrome-tab: rgba(255, 255, 255, 0.07);
+  --chrome-toolbar: rgba(18, 14, 38, 0.55);
+  --omnibox-bg: rgba(255, 255, 255, 0.08);
+
+  /* Per-app identity gradients from the Nebula mockup */
+  --app-browser: #ff9d4d;   /* orange */
+  --app-terminal: #3fb950;  /* green */
+  --app-code: #5b9dff;      /* blue */
+  --app-draw: #00d4dc;      /* cyan */
+
+  /* Nebula-only structural vars (consumed by nebula.css) */
+  --neb-gradient: linear-gradient(135deg, #3b2a6b 0%, #5b3aa8 38%, #2f6fb0 100%);
+  --neb-blob-1: radial-gradient(circle, rgba(255, 150, 200, 0.45), transparent 70%);
+  --neb-blob-2: radial-gradient(circle, rgba(90, 220, 255, 0.35), transparent 70%);
+  --neb-glass: rgba(30, 24, 56, 0.55);
+  --neb-glass-2: rgba(30, 24, 56, 0.70);
+  --neb-glass-strong: rgba(20, 14, 40, 0.40);
+  --neb-grad-browser: linear-gradient(135deg, #ff9d4d, #f0700e);
+  --neb-grad-terminal: linear-gradient(135deg, #3fb950, #2e8c3e);
+  --neb-grad-code: linear-gradient(135deg, #5b9dff, #3a6fe0);
+  --neb-grad-draw: linear-gradient(135deg, #00d4dc, #0090b0);
+}
+
 :root[data-theme="aurora"] {
   --bg: #141021;
   --surface-1: #1b1630;

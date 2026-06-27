@@ -81,6 +81,7 @@ function setMode(next) {
   }
   terminalTrail.hidden = next !== 'terminal';
   FEATURES[next].activate();
+  updateDock();
 }
 
 // Clicking any tab in a cluster switches to that workspace.
@@ -95,26 +96,49 @@ document.querySelectorAll('#topbar [data-act]').forEach((b) => {
 
 /* ---------------- The "+" new-tab menu (replaces the mode toggle) ---------------- */
 
-const NEW_MENU = [
-  { label: 'New Browser Tab', key: '⌘T', action: 'browser:new-tab', dot: 'var(--app-browser)' },
-  { label: 'New Incognito Tab', key: '⌘⇧N', action: 'browser:new-incognito', dot: '#a084e8' },
-  { sep: true },
-  { label: 'New Terminal', key: '⌘⇧T', action: 'terminal:new-session', dot: 'var(--app-terminal)' },
-  { sep: true },
-  { label: 'New Code Workspace…', action: 'code:open-folder', dot: 'var(--app-code)' },
-  { label: 'New Canvas', action: 'draw:new', dot: 'var(--app-draw)' },
+const LAUNCHER_APPS = [
+  { app: 'terminal', name: 'Terminal', desc: 'Command line & shell', action: 'terminal:new-session',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 8l3.5 3.5L5 15M11 16h7"/></svg>' },
+  { app: 'code', name: 'Code Editor', desc: 'Write and edit code', action: 'code:open-folder',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>' },
+  { app: 'draw', name: 'Design Studio', desc: 'Create on an infinite canvas', action: 'draw:new',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="8" cy="8" r="3.1"/><path d="M13 17l4-7 4 7z"/><rect x="4" y="14" width="6" height="6" rx="1.4"/></svg>' },
+  { app: 'browser', name: 'Browser', desc: 'Browse the web', action: 'browser:new-tab',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3.6" ry="8"/><path d="M4 12h16"/></svg>' },
 ];
-const newMenuEl = document.getElementById('new-menu');
-document.getElementById('ws-new').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (!newMenuEl.hidden) { closeDropdowns(); return; }
-  renderMenu(newMenuEl, NEW_MENU);
-  const r = e.currentTarget.getBoundingClientRect();
-  newMenuEl.hidden = false;
-  newMenuEl.style.top = `${r.bottom + 6}px`;
-  newMenuEl.style.left = `${r.left}px`;
-  newMenuEl.style.right = 'auto';
+
+const launcherScrim = document.getElementById('app-launcher');
+const launcherGrid = document.getElementById('launcher-grid');
+
+function renderLauncher() {
+  launcherGrid.innerHTML = '';
+  LAUNCHER_APPS.forEach((a, i) => {
+    const tile = document.createElement('button');
+    tile.className = 'launcher-tile' + (a.app === mode ? ' is-active' : '');
+    tile.innerHTML = `<span class="lt-icon" data-app="${a.app}">${a.icon}</span>
+      <span class="lt-text"><b>${a.name}</b><span>${a.desc}</span></span>`;
+    tile.addEventListener('click', () => { closeLauncher(); dispatch(a.action); });
+    launcherGrid.appendChild(tile);
+  });
+}
+function openLauncher() { closeDropdowns(); renderLauncher(); launcherScrim.hidden = false; }
+function closeLauncher() { launcherScrim.hidden = true; }
+function launcherOpen() { return !launcherScrim.hidden; }
+
+launcherScrim.addEventListener('mousedown', (e) => { if (e.target === launcherScrim) closeLauncher(); });
+document.getElementById('ws-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
+document.getElementById('dock-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
+
+// Dock app buttons (and any [data-act] outside #topbar).
+document.querySelectorAll('#nebula-dock [data-act]').forEach((b) => {
+  b.addEventListener('click', () => dispatch(b.dataset.act));
 });
+
+function updateDock() {
+  document.querySelectorAll('#nebula-dock .dock-app').forEach((b) => {
+    b.classList.toggle('is-active', b.dataset.app === mode);
+  });
+}
 
 /* ---------------- Central action router ---------------- */
 
@@ -330,13 +354,15 @@ document.addEventListener('mousedown', (e) => {
 
 // Each maps to a [data-theme] block in tokens.css; '' is the built-in default.
 const APP_THEMES = [
+  { id: 'nebula', name: 'Nebula', dot: '#8b7cff' },
   { id: '', name: 'Midnight', dot: '#6d9bff' },
   { id: 'graphite', name: 'Graphite', dot: '#a0a4b8' },
   { id: 'nord', name: 'Nord', dot: '#88c0d0' },
   { id: 'aurora', name: 'Aurora', dot: '#c58af9' },
 ];
 const THEME_KEY = 'tandem:app-theme';
-let appTheme = localStorage.getItem(THEME_KEY) || '';
+// Nebula (glass desktop) is the default look; honour a stored choice if present.
+let appTheme = localStorage.getItem(THEME_KEY) ?? 'nebula';
 
 function applyAppTheme() {
   if (appTheme) document.documentElement.dataset.theme = appTheme;
@@ -566,9 +592,16 @@ paletteScrim.addEventListener('mousedown', (e) => { if (e.target === paletteScri
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeDropdowns();
+    if (launcherOpen()) closeLauncher();
     if (!paletteScrim.hidden) closePalette();
     if (!panelScrim.hidden) hidePanel();
     if (!mdScrim.hidden) closeMarkdown();
+  }
+  // Number keys 1–4 pick an app while the launcher is open.
+  if (launcherOpen() && /^[1-4]$/.test(e.key)) {
+    e.preventDefault();
+    const a = LAUNCHER_APPS[Number(e.key) - 1];
+    if (a) { closeLauncher(); dispatch(a.action); }
   }
 });
 
