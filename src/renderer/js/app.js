@@ -81,7 +81,7 @@ function setMode(next) {
   }
   terminalTrail.hidden = next !== 'terminal';
   FEATURES[next].activate();
-  updateDock();
+  updateRail();
 }
 
 // Clicking any tab in a cluster switches to that workspace.
@@ -127,15 +127,15 @@ function launcherOpen() { return !launcherScrim.hidden; }
 
 launcherScrim.addEventListener('mousedown', (e) => { if (e.target === launcherScrim) closeLauncher(); });
 document.getElementById('ws-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
-document.getElementById('dock-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
+document.getElementById('rail-new').addEventListener('click', (e) => { e.stopPropagation(); launcherOpen() ? closeLauncher() : openLauncher(); });
 
-// Dock app buttons (and any [data-act] outside #topbar).
-document.querySelectorAll('#nebula-dock [data-act]').forEach((b) => {
+// Left-rail app buttons (and any [data-act] outside #topbar).
+document.querySelectorAll('#nebula-rail [data-act]').forEach((b) => {
   b.addEventListener('click', () => dispatch(b.dataset.act));
 });
 
-function updateDock() {
-  document.querySelectorAll('#nebula-dock .dock-app').forEach((b) => {
+function updateRail() {
+  document.querySelectorAll('#nebula-rail .rail-app').forEach((b) => {
     b.classList.toggle('is-active', b.dataset.app === mode);
   });
 }

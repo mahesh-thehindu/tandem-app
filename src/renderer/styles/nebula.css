@@ -116,94 +116,117 @@
   border: 1px solid var(--border);
 }
 
-/* ============ Bottom dock ============ */
+/* ============ Shell: left rail + stage ============ */
 
-#nebula-dock {
-  flex: 0 0 auto;
-  height: 60px;
+#shell {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+
+#stage { flex: 1 1 auto; min-width: 0; }
+
+/* ============ Orbit-style left app rail ============ */
+
+#nebula-rail {
+  flex: 0 0 64px;
+  width: 64px;
   display: none;            /* shown only in the Nebula theme */
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  padding: 14px 0;
   position: relative;
   z-index: 5;
 }
 
-[data-theme="nebula"] #nebula-dock {
+[data-theme="nebula"] #nebula-rail {
   display: flex;
   background: var(--neb-glass-strong);
   backdrop-filter: blur(22px) saturate(140%);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
-  border-top: 1px solid var(--border-soft);
+  border-right: 1px solid var(--border-soft);
 }
 
-.dock-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.dock-app {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 13px;
+.rail-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
-  color: #fff;
-  transition: transform var(--fast) var(--ease), box-shadow var(--fast);
+  background: linear-gradient(135deg, #8b7cff, #5b8bff);
+  box-shadow: 0 4px 14px rgba(124, 108, 255, 0.35);
 }
-.dock-app svg { width: 21px; height: 21px; }
-.dock-app:hover { transform: translateY(-3px); }
-
-.dock-app[data-app="browser"] { background: var(--neb-grad-browser); }
-.dock-app[data-app="terminal"] { background: var(--neb-grad-terminal); }
-.dock-app[data-app="code"] { background: var(--neb-grad-code); }
-.dock-app[data-app="draw"] { background: var(--neb-grad-draw); }
-
-/* Active app gets a lifted ring + a dot under it. */
-.dock-app.is-active {
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55), 0 8px 20px rgba(0, 0, 0, 0.35);
+.rail-logo .rl-mark {
+  width: 12px;
+  height: 12px;
+  border: 2.4px solid var(--neb-glass-strong);
+  border-radius: 4px;
+  transform: rotate(45deg);
 }
-.dock-app.is-active::after {
+
+.rail-sep {
+  width: 26px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.10);
+  margin: 4px 0;
+}
+
+.rail-app {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 13px;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  color: var(--text-dim);
+  transition: background var(--fast) var(--ease), color var(--fast);
+}
+.rail-app svg { width: 22px; height: 22px; }
+.rail-app:hover { background: rgba(255, 255, 255, 0.06); color: var(--text-2); }
+
+.rail-app[data-app="browser"] { --rc: #ff9d4d; }
+.rail-app[data-app="terminal"] { --rc: #3fb950; }
+.rail-app[data-app="code"] { --rc: #5b9dff; }
+.rail-app[data-app="draw"] { --rc: #00d4dc; }
+
+/* Active app: lit tile, coloured icon, and a left accent bar (Orbit). */
+.rail-app.is-active {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--rc);
+}
+.rail-app.is-active svg { stroke: var(--rc); }
+.rail-app.is-active::before {
   content: "";
   position: absolute;
-  bottom: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #fff;
+  left: -8px;
+  top: 11px;
+  width: 3px;
+  height: 22px;
+  border-radius: 0 3px 3px 0;
+  background: var(--rc);
 }
 
-.dock-divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.2);
-}
+.rail-spacer { flex: 1; }
 
-.dock-new {
+.rail-new {
   width: 44px;
   height: 44px;
   border: none;
   border-radius: 14px;
-  background: #fff;
-  color: #5b3aa8;
-  font-size: 27px;
+  background: linear-gradient(135deg, #8b7cff, #6a5bff);
+  color: #fff;
+  font-size: 25px;
   font-weight: 300;
   line-height: 1;
   display: grid;
   place-items: center;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
-  transition: transform var(--fast) var(--ease);
+  box-shadow: 0 0 0 4px rgba(124, 108, 255, 0.16);
+  transition: transform var(--fast) var(--ease), filter var(--fast);
 }
-.dock-new:hover { transform: translateY(-3px) scale(1.04); }
+.rail-new:hover { transform: scale(1.05); filter: brightness(1.08); }
 
 /* ============ App-grid launcher modal ============ */
 
