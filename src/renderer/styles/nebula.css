@@ -193,6 +193,7 @@
 .rail-app[data-app="terminal"] { --rc: #3fb950; }
 .rail-app[data-app="code"] { --rc: #5b9dff; }
 .rail-app[data-app="draw"] { --rc: #00d4dc; }
+.rail-app[data-app="ai"] { --rc: #c77dff; }
 
 /* Active app: lit tile, coloured icon, and a left accent bar (Orbit). */
 .rail-app.is-active {
@@ -312,6 +313,7 @@
 .lt-icon[data-app="terminal"] { background: var(--neb-grad-terminal); }
 .lt-icon[data-app="code"] { background: var(--neb-grad-code); }
 .lt-icon[data-app="draw"] { background: var(--neb-grad-draw); }
+.lt-icon[data-app="ai"] { background: var(--neb-grad-ai); }
 
 .lt-text b { display: block; font-size: 16px; font-weight: 700; }
 .lt-text span { font-size: 12px; color: rgba(255, 255, 255, 0.6); }
@@ -335,3 +337,62 @@
   padding: 1px 6px;
 }
 .launcher-foot .lf-spacer { margin-left: auto; font-weight: 600; color: rgba(255, 255, 255, 0.7); }
+
+/* ============ AI workspace (provider switcher + webviews) ============ */
+/* Structural rules apply in every theme; the glass bar is Nebula-only. */
+
+#ai-mode { display: flex; flex-direction: column; }
+
+.ai-switcher {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 12px;
+  background: var(--chrome-toolbar);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+[data-theme="nebula"] .ai-switcher {
+  background: var(--neb-glass-strong);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--surface-1);
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background var(--fast), color var(--fast), border-color var(--fast);
+}
+.ai-pill:hover { background: var(--surface-2); color: var(--text); }
+.ai-pill.is-active { background: var(--surface-2); color: var(--text); border-color: var(--app-ai); }
+
+.ai-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
+
+.ai-reload {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+}
+.ai-reload svg { width: 17px; height: 17px; }
+.ai-reload:hover { background: var(--surface-hover); color: var(--text); }
+
+.ai-stack { flex: 1 1 auto; position: relative; min-height: 0; background: #fff; }
+.ai-stack webview { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ai-stack webview.is-hidden { display: none; }

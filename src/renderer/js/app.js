@@ -4,11 +4,13 @@ import { initBrowser } from './browser/index.js';
 import { initTerminal } from './terminal/index.js';
 import { initCode } from './code/index.js';
 import { initDraw } from './draw/index.js';
+import { initAi } from './ai/index.js';
 
 const browserRoot = document.getElementById('browser-mode');
 const terminalRoot = document.getElementById('terminal-mode');
 const codeRoot = document.getElementById('code-mode');
 const drawRoot = document.getElementById('draw-mode');
+const aiRoot = document.getElementById('ai-mode');
 
 /* ---------------- Toast ---------------- */
 
@@ -56,12 +58,13 @@ const browser = initBrowser(browserRoot, ctx);
 const terminal = initTerminal(terminalRoot, ctx);
 const code = initCode(codeRoot, ctx);
 const draw = initDraw(drawRoot, ctx);
+const ai = initAi(aiRoot, ctx);
 
 /* ---------------- Mode switching ---------------- */
 
 let mode = 'browser';
-const FEATURES = { browser, terminal, code, draw };
-const ROOTS = { browser: browserRoot, terminal: terminalRoot, code: codeRoot, draw: drawRoot };
+const FEATURES = { browser, terminal, code, draw, ai };
+const ROOTS = { browser: browserRoot, terminal: terminalRoot, code: codeRoot, draw: drawRoot, ai: aiRoot };
 const CLUSTERS = {
   browser: document.getElementById('browser-tabcluster'),
   terminal: document.getElementById('terminal-tabcluster'),
@@ -76,8 +79,8 @@ function setMode(next) {
   mode = next;
   for (const m of Object.keys(FEATURES)) {
     ROOTS[m].classList.toggle('is-hidden', m !== next);
-    if (ON_DEMAND[m]) CLUSTERS[m].hidden = !(m === next || ON_DEMAND[m]());
-    CLUSTERS[m].classList.toggle('cluster-dim', m !== next);
+    if (ON_DEMAND[m] && CLUSTERS[m]) CLUSTERS[m].hidden = !(m === next || ON_DEMAND[m]());
+    CLUSTERS[m]?.classList.toggle('cluster-dim', m !== next); // ai has no tab cluster
   }
   terminalTrail.hidden = next !== 'terminal';
   FEATURES[next].activate();
@@ -105,6 +108,8 @@ const LAUNCHER_APPS = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="8" cy="8" r="3.1"/><path d="M13 17l4-7 4 7z"/><rect x="4" y="14" width="6" height="6" rx="1.4"/></svg>' },
   { app: 'browser', name: 'Browser', desc: 'Browse the web', action: 'browser:new-tab',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3.6" ry="8"/><path d="M4 12h16"/></svg>' },
+  { app: 'ai', name: 'AI Assistant', desc: 'Claude & Kimi', action: 'ai:open',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8z"/></svg>' },
 ];
 
 const launcherScrim = document.getElementById('app-launcher');
@@ -186,6 +191,11 @@ function dispatch(action) {
   if (action.startsWith('draw:')) {
     if (mode !== 'draw') setMode('draw');
     draw.handleCommand(action);
+    return;
+  }
+  if (action.startsWith('ai:')) {
+    if (mode !== 'ai') setMode('ai');
+    ai.handleCommand(action);
   }
 }
 
@@ -480,6 +490,9 @@ const COMMANDS = [
   { label: 'Show Terminal', cat: 'View', key: '⌘2', action: 'view:terminal' },
   { label: 'Show Code', cat: 'View', key: '⌘3', action: 'view:code' },
   { label: 'Show Canvas', cat: 'View', key: '⌘4', action: 'view:draw' },
+  { label: 'Show AI Assistant', cat: 'View', key: '⌘5', action: 'view:ai' },
+  { label: 'AI: Claude', cat: 'AI', action: 'ai:provider:claude' },
+  { label: 'AI: Kimi', cat: 'AI', action: 'ai:provider:kimi' },
   { label: 'Open Folder in Code', cat: 'Code', action: 'code:open-folder' },
   { label: 'New Canvas', cat: 'Canvas', action: 'draw:new' },
   { label: 'New Tab', cat: 'Browser', key: '⌘T', action: 'browser:new-tab' },
@@ -607,8 +620,8 @@ document.addEventListener('keydown', (e) => {
     if (!panelScrim.hidden) hidePanel();
     if (!mdScrim.hidden) closeMarkdown();
   }
-  // Number keys 1–4 pick an app while the launcher is open.
-  if (launcherOpen() && /^[1-4]$/.test(e.key)) {
+  // Number keys pick an app while the launcher is open.
+  if (launcherOpen() && /^[1-9]$/.test(e.key)) {
     e.preventDefault();
     const a = LAUNCHER_APPS[Number(e.key) - 1];
     if (a) { closeLauncher(); dispatch(a.action); }

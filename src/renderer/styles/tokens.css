@@ -31,6 +31,7 @@
   --app-terminal: #4fd6b8;    /* mint/green */
   --app-code: #f6a350;        /* amber */
   --app-draw: #a78bfa;        /* violet */
+  --app-ai: #c77dff;          /* orchid */
 
   /* ---- Chrome-specific ---- */
   --chrome-strip: #1a1b22;
@@ -129,6 +130,7 @@
   --app-terminal: #3fb950;  /* green */
   --app-code: #5b9dff;      /* blue */
   --app-draw: #00d4dc;      /* cyan */
+  --app-ai: #c77dff;        /* orchid */
 
   /* Nebula-only structural vars (consumed by nebula.css) */
   --neb-gradient: linear-gradient(135deg, #3b2a6b 0%, #5b3aa8 38%, #2f6fb0 100%);
@@ -141,6 +143,7 @@
   --neb-grad-terminal: linear-gradient(135deg, #3fb950, #2e8c3e);
   --neb-grad-code: linear-gradient(135deg, #5b9dff, #3a6fe0);
   --neb-grad-draw: linear-gradient(135deg, #00d4dc, #0090b0);
+  --neb-grad-ai: linear-gradient(135deg, #ff8fab, #b14bff);
 }
 
 :root[data-theme="aurora"] {

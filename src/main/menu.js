@@ -74,6 +74,7 @@ function buildMenu() {
         { label: 'Show Terminal', accelerator: 'CmdOrCtrl+2', click: () => send('view:terminal') },
         { label: 'Show Code', accelerator: 'CmdOrCtrl+3', click: () => send('view:code') },
         { label: 'Show Canvas', accelerator: 'CmdOrCtrl+4', click: () => send('view:draw') },
+        { label: 'Show AI Assistant', accelerator: 'CmdOrCtrl+5', click: () => send('view:ai') },
         { label: 'Open Folder in Code…', click: () => send('code:open-folder') },
         { label: 'New Canvas', click: () => send('draw:new') },
         { type: 'separator' },
