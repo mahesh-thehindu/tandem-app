@@ -339,9 +339,11 @@
 .launcher-foot .lf-spacer { margin-left: auto; font-weight: 600; color: rgba(255, 255, 255, 0.7); }
 
 /* ============ AI workspace (provider switcher + webviews) ============ */
-/* Structural rules apply in every theme; the glass bar is Nebula-only. */
-
-#ai-mode { display: flex; flex-direction: column; }
+/* Structural rules apply in every theme; the glass bar is Nebula-only.
+   NOTE: do NOT add `#ai-mode { display:flex }` — an ID selector outranks
+   `.mode.is-hidden { display:none }`, so the panel would never hide and would
+   paint on top of every other workspace. The base `.mode` rule already makes
+   it a flex column. */
 
 .ai-switcher {
   flex: 0 0 auto;
